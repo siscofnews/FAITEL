@@ -1,0 +1,2 @@
+-- Remove the public access policy from churches table since public access is now handled by the churches_public view
+DROP POLICY IF EXISTS "Anyone can view approved active churches" ON public.churches;

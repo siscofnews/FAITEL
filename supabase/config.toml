@@ -1,0 +1,10 @@
+project_id = "bomedhlxwrliqwgscbci"
+
+[functions.generate-motivational]
+verify_jwt = false
+
+[functions.fetch-evangelical-news]
+verify_jwt = false
+
+[functions.fetch-external-news]
+verify_jwt = false
