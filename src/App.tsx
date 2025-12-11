@@ -58,7 +58,20 @@ import DetalheCurso from "./pages/DetalheCurso";
 import MeusCursos from "./pages/MeusCursos";
 import Certificados from "./pages/Certificados";
 import FinanceiroSISCOF from "./pages/FinanceiroSISCOF";
+import GerenciarCursos from "./pages/GerenciarCursos";
+import GerenciarModulosAulas from "./pages/GerenciarModulosAulas";
+import GerenciarTurmas from "./pages/GerenciarTurmas";
+import GerenciarAvaliacoes from "./pages/GerenciarAvaliacoes";
+import MinhasTurmas from "./pages/MinhasTurmas";
+import MatricularTurma from "./pages/MatricularTurma";
+import ConteudoTurma from "./pages/ConteudoTurma";
+import AssistirAula from "./pages/AssistirAula";
+import AlunosMatriculados from "./pages/AlunosMatriculados";
+import DashboardMelhorado from "./pages/DashboardMelhorado";
+import ConfiguracoesNotificacoes from "./pages/ConfiguracoesNotificacoes";
+import ConfiguracoesVisuais from "./pages/ConfiguracoesVisuais";
 
+import SiscofAssistant from "./components/SiscofAssistant";
 import LandingEscalas from "./pages/public/LandingEscalas";
 import CadastroMembroPublico from "./pages/public/CadastroMembroPublico";
 import CreateSchedulePage from "./pages/worship/CreateSchedulePage";
@@ -144,6 +157,7 @@ const App = () => (
                   <Route path="/gerenciar-dados" element={<ProtectedRoute><GerenciarDados /></ProtectedRoute>} />
 
 
+
                   {/* SISCOF - Escola de Culto */}
                   <Route path="/escola-culto" element={<ProtectedRoute><EscolaCulto /></ProtectedRoute>} />
                   <Route path="/escola-culto/curso/:id" element={<ProtectedRoute><DetalheCurso /></ProtectedRoute>} />
@@ -151,8 +165,28 @@ const App = () => (
                   <Route path="/escola-culto/certificados" element={<ProtectedRoute><Certificados /></ProtectedRoute>} />
                   <Route path="/financeiro-siscof" element={<ProtectedRoute><FinanceiroSISCOF /></ProtectedRoute>} />
 
+                  {/* SISCOF - Admin Pages */}
+                  <Route path="/gerenciar-cursos" element={<ProtectedRoute><GerenciarCursos /></ProtectedRoute>} />
+                  <Route path="/escola-culto/curso/:courseId/gerenciar" element={<ProtectedRoute><GerenciarModulosAulas /></ProtectedRoute>} />
+                  <Route path="/gerenciar-turmas" element={<ProtectedRoute><GerenciarTurmas /></ProtectedRoute>} />
+                  <Route path="/aula/:lessonId/avaliacoes" element={<ProtectedRoute><GerenciarAvaliacoes /></ProtectedRoute>} />
+                  <Route path="/turma/:classId/alunos" element={<ProtectedRoute><AlunosMatriculados /></ProtectedRoute>} />
+                  {/* SISCOF - Student Pages */}
+                  <Route path="/minhas-turmas" element={<ProtectedRoute><MinhasTurmas /></ProtectedRoute>} />
+                  <Route path="/curso/:courseId/matricular" element={<ProtectedRoute><MatricularTurma /></ProtectedRoute>} />
+                  <Route path="/turma/:classId/aulas" element={<ProtectedRoute><ConteudoTurma /></ProtectedRoute>} />
+                  <Route path="/aula/:lessonId/assistir" element={<ProtectedRoute><AssistirAula /></ProtectedRoute>} />
+
+                  {/* SISCOF - New Features from Escalas PRD */}
+                  <Route path="/dashboard-melhorado" element={<ProtectedRoute><DashboardMelhorado /></ProtectedRoute>} />
+                  <Route path="/configuracoes-notificacoes" element={<ProtectedRoute><ConfiguracoesNotificacoes /></ProtectedRoute>} />
+                  <Route path="/configuracoes-visuais" element={<ProtectedRoute><ConfiguracoesVisuais /></ProtectedRoute>} />
+
+
                   <Route path="*" element={<NotFound />} />
                 </Routes>
+                {/* AI Assistant - Available globally when logged in */}
+                <SiscofAssistant />
               </div>
               <Toaster />
             </TooltipProvider>
