@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Permissoes } from "@/entities/Permissoes";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -87,49 +88,25 @@ export default function GerenciarPermissoes() {
 
     const grantStatus = async (userId: string, memberName: string) => {
         try {
-            const { error } = await supabase.rpc('grant_manipulator_status', {
-                p_target_user_id: userId,
-            });
-
-            if (error) throw error;
-
-            toast({
-                title: "✅ Status Concedido",
-                description: `${memberName} agora é um Manipulador.`,
-            });
-
+            await Permissoes.assign({ user_id: userId, scope: 'local', role_name: 'manipulator' });
+            toast({ title: "✅ Status Concedido", description: `${memberName} agora é um Manipulador.` });
             loadMembers();
         } catch (error: any) {
             console.error("Error granting status:", error);
-            toast({
-                title: "Erro ao conceder status",
-                description: error.message || "Não foi possível conceder o status",
-                variant: "destructive",
-            });
+            toast({ title: "Erro ao conceder status", description: error.message || "Não foi possível conceder o status", variant: "destructive" });
         }
     };
 
     const revokeStatus = async (userId: string, memberName: string) => {
         try {
-            const { error } = await supabase.rpc('revoke_manipulator_status', {
-                p_target_user_id: userId,
-            });
-
-            if (error) throw error;
-
-            toast({
-                title: "Status Revogado",
-                description: `${memberName} não é mais Manipulador.`,
-            });
-
+            const assignments = await Permissoes.listByUser(userId);
+            const manip = assignments.find(a => a.scope === 'local' && a.role_name === 'manipulator');
+            if (manip?.id) await Permissoes.revoke(manip.id);
+            toast({ title: "Status Revogado", description: `${memberName} não é mais Manipulador.` });
             loadMembers();
         } catch (error: any) {
             console.error("Error revoking status:", error);
-            toast({
-                title: "Erro ao revogar status",
-                description: error.message,
-                variant: "destructive",
-            });
+            toast({ title: "Erro ao revogar status", description: error.message, variant: "destructive" });
         }
     };
 

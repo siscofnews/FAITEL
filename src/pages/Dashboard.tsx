@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Building, Building2, Store, Church, Users, Plus, Eye, GraduationCap, BookOpen, Award, DollarSign } from "lucide-react";
+import { Assinaturas, Modulos, PlanModules } from "@/entities/Assinaturas";
 
 interface ChurchStats {
     sedes: number;
@@ -30,6 +31,9 @@ export default function Dashboard() {
     const [stats, setStats] = useState<ChurchStats>({ sedes: 0, subsedes: 0, congregacoes: 0, celulas: 0 });
     const [subordinadas, setSubordinadas] = useState<Church[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [subscription, setSubscription] = useState<any | null>(null);
+    const [planModuleKeys, setPlanModuleKeys] = useState<string[]>([]);
+    const [planModulesMeta, setPlanModulesMeta] = useState<{ key: string; name: string }[]>([]);
 
     useEffect(() => {
         if (churchId) {
@@ -54,6 +58,23 @@ export default function Dashboard() {
 
             // Carregar unidades subordinadas diretas
             await loadSubordinadas();
+
+            // Carregar assinatura
+            const subs = await Assinaturas.listByChurch(churchId);
+            const currentSub = subs[0] || null;
+            setSubscription(currentSub);
+
+            // Carregar módulos vinculados ao plano
+            if (currentSub?.plan_id) {
+                const links = await PlanModules.listByPlan(currentSub.plan_id);
+                const keys = links.map(l => l.module_key);
+                setPlanModuleKeys(keys);
+                const allMods = await Modulos.list();
+                setPlanModulesMeta(allMods.filter(m => keys.includes(m.key)));
+            } else {
+                setPlanModuleKeys([]);
+                setPlanModulesMeta([]);
+            }
         } catch (error) {
             console.error("Error loading dashboard:", error);
         } finally {
@@ -181,6 +202,49 @@ export default function Dashboard() {
                         <Badge className="mt-2">{myChurch.nivel.toUpperCase()}</Badge>
                     </div>
                 </div>
+
+                {/* Indicadores de Assinatura */}
+                {subscription && (
+                    <Card className="border-2">
+                        <CardContent className="py-4">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <span className={`w-3 h-3 rounded-full ${subscription.status === 'active' ? 'bg-green-500' : subscription.status === 'blocked' ? 'bg-red-600' : 'bg-yellow-500'}`}></span>
+                                    <span className="text-sm">Status: <strong className="uppercase">{subscription.status}</strong></span>
+                                    {subscription.last_payment_at && (
+                                        <span className="text-sm text-muted-foreground">Último pagamento: {new Date(subscription.last_payment_at).toLocaleDateString('pt-BR')}</span>
+                                    )}
+                                </div>
+                                <div className="flex gap-2">
+                                    <Button variant="outline" size="sm" onClick={() => navigate('/financeiro-siscof')}>Ir para Financeiro</Button>
+                                    {subscription.status === 'blocked' && (
+                                        <Badge className="bg-destructive text-destructive-foreground">Bloqueado por inadimplência</Badge>
+                                    )}
+                                </div>
+                            </div>
+                            {subscription.status === 'pending' && (
+                                <div className="mt-3">
+                                    <Card className="border-yellow-300 bg-yellow-50">
+                                        <CardContent className="py-3 flex items-center justify-between">
+                                            <span className="text-sm">Assinatura pendente. Configure o pagamento para evitar bloqueio automático em 33 dias.</span>
+                                            <Button size="sm" onClick={() => navigate('/financeiro-siscof')}>Configurar Pagamento</Button>
+                                        </CardContent>
+                                    </Card>
+                                </div>
+                            )}
+                            {subscription.plan_id && planModulesMeta.length > 0 && (
+                                <div className="mt-3">
+                                    <div className="text-sm mb-2">Módulos do plano</div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {planModulesMeta.map(m => (
+                                            <Badge key={m.key} variant="outline">{m.name}</Badge>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                )}
             </div>
 
             {/* SISCOF - Escola de Culto */}

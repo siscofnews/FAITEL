@@ -31,6 +31,9 @@ const navigation = [
   { name: "Nova Igreja", href: "/cadastrar-igreja-filha", icon: PlusCircle },
   { name: "Escola de Culto", href: "/escola", icon: GraduationCap },
   { name: "Escalas", href: "/escalas", icon: Calendar },
+  { name: "Assistente", href: "/assistente-lembretes", icon: MessageSquare },
+  { name: "Contatos Lembretes", href: "/contatos-lembretes", icon: Users },
+  { name: "Lembretes", href: "/lembretes-automaticos", icon: Calendar },
   { name: "Pessoas", href: "/pessoas", icon: Users },
   { name: "Comunicação", href: "/comunicacao", icon: MessageSquare },
   { name: "Relatórios", href: "/relatorios", icon: BarChart3 },
@@ -41,6 +44,7 @@ const navigation = [
 const adminNavigation = [
   { name: "Nova Igreja", href: "/cadastrar-igreja-admin", icon: PlusCircle },
   { name: "Aprovar Igrejas", href: "/igrejas-aprovacao", icon: ShieldCheck },
+  { name: "Assinaturas", href: "/assinaturas", icon: CreditCard },
 ];
 
 interface SidebarProps {

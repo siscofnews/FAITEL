@@ -29,15 +29,31 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { signIn, signUp, user, loading } = useAuth();
+  const { signIn, signUp, user, loading, isSuperAdmin } = useAuth();
+  const [target, setTarget] = useState<string>("");
 
   // Redirect if already logged in
   useEffect(() => {
     if (user && !loading) {
-      const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/dashboard";
+      const params = new URLSearchParams(location.search);
+      const t = params.get('target') || target;
+      const defaultRoute = isSuperAdmin || t === 'super'
+        ? '/admin/global'
+        : t === 'faculdade'
+          ? '/admin/faculdades/matriz'
+          : t === 'convencao'
+            ? '/admin/convencoes/estaduais'
+            : '/dashboard';
+      const from = (location.state as { from?: { pathname: string } })?.from?.pathname || defaultRoute;
       navigate(from, { replace: true });
     }
-  }, [user, loading, navigate, location]);
+  }, [user, loading, isSuperAdmin, navigate, location, target]);
+
+  useEffect(()=>{
+    const params = new URLSearchParams(location.search);
+    const t = params.get('target');
+    if (t) setTarget(t);
+  }, [location.search]);
 
   const validateForm = () => {
     setErrors({});
@@ -287,6 +303,31 @@ export default function Login() {
               {isLogin ? "Cadastre-se" : "Entrar"}
             </button>
           </p>
+
+          {/* Contextos de Login */}
+          <div className="mt-6 grid grid-cols-2 gap-2">
+            <Button
+              type="button"
+              variant={target==='faculdade'? 'hero':'outline'}
+              onClick={()=>{ setTarget('faculdade'); navigate('/login?target=faculdade', { replace: true }); }}
+            >
+              Faculdade (EAD)
+            </Button>
+            <Button
+              type="button"
+              variant={target==='convencao'? 'hero':'outline'}
+              onClick={()=>{ setTarget('convencao'); navigate('/login?target=convencao', { replace: true }); }}
+            >
+              Convenção
+            </Button>
+            <Button
+              type="button"
+              variant={target==='super'? 'hero':'outline'}
+              onClick={()=>{ setTarget('super'); navigate('/login?target=super', { replace: true }); }}
+            >
+              Super Admin
+            </Button>
+          </div>
 
           {/* Login Cliente */}
           <div className="mt-8 p-4 rounded-xl bg-secondary/50 border border-border">

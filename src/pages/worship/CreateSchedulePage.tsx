@@ -5,6 +5,7 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { getUserScopeStates, filterChurchesByScope } from "@/wiring/accessScope";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
@@ -21,11 +22,9 @@ export default function CreateSchedulePage() {
             // but for now we look for churches where the user is linked (e.g. pastor/admin)
             // OR simply fetch all if super_admin.
             // Simplified: Fetch APPROVED churches.
-            const { data, error } = await supabase
-                .from("churches")
-                .select("id, nome_fantasia")
-                .eq("is_approved", true)
-                .limit(1); // For now, just getting one to default. In real hierarchy, we'd list them.
+            const scope = await getUserScopeStates(user.id);
+            const query = await filterChurchesByScope(scope);
+            const { data, error } = await query.limit(1);
 
             if (error) throw error;
             return data || [];

@@ -25,30 +25,31 @@ export default function EscolaCulto() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const loadCourses = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from("courses")
+                    .select("*")
+                    .eq("is_published", true)
+                    .eq("is_active", true)
+                    .order("created_at", { ascending: false });
+
+                if (error) throw error;
+                setCourses(data || []);
+            } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
+                toast({
+                    title: "Erro ao carregar cursos",
+                    description: errorMessage,
+                    variant: "destructive",
+                });
+            } finally {
+                setLoading(false);
+            }
+        };
+
         loadCourses();
-    }, []);
-
-    const loadCourses = async () => {
-        try {
-            const { data, error } = await supabase
-                .from("courses")
-                .select("*")
-                .eq("is_published", true)
-                .eq("is_active", true)
-                .order("created_at", { ascending: false });
-
-            if (error) throw error;
-            setCourses(data || []);
-        } catch (error: any) {
-            toast({
-                title: "Erro ao carregar cursos",
-                description: error.message,
-                variant: "destructive",
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
+    }, [toast]);
 
     const getCategoryLabel = (category: string) => {
         const labels: Record<string, string> = {

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import { seedTemplatesForChurchLevel, grantCreatorDefaultRoles } from "@/wiring/permissions";
 import { createClient } from "@supabase/supabase-js";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -237,6 +238,12 @@ export default function CadastrarIgrejaFilha() {
         .eq('id', newChurchId as string);
 
       if (updateError) console.error("Erro ao atualizar detalhes extras da igreja:", updateError);
+
+      // Seed perfis conforme nível e conceder role ao criador
+      await seedTemplatesForChurchLevel(data.nivel as any);
+      if (user?.id) {
+        await grantCreatorDefaultRoles(newChurchId as string, user.id, data.nivel);
+      }
 
       // 3. Se forneceu email e senha do pastor, criar usuário
       if (data.pastor_email && data.pastor_senha) {

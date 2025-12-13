@@ -22,6 +22,42 @@ export const useExternalNews = (source: 'all' | 'jmnoticia' | 'fuxicogospel' = '
       setIsLoading(true);
       setError(null);
 
+      // Mock data directly
+      setNews([
+          {
+            id: '1',
+            title: 'Convenção Geral das Assembleias de Deus no Brasil define data da próxima AGO',
+            excerpt: 'A liderança da CGADB se reuniu para definir os detalhes da próxima Assembleia Geral Ordinária que acontecerá em São Paulo.',
+            image: 'https://images.unsplash.com/photo-1544928147-79a79476e6a3?w=800&auto=format&fit=crop&q=60',
+            category: 'Brasil',
+            source: 'JM Notícia',
+            date: new Date().toISOString(),
+            url: '#'
+          },
+          {
+            id: '2',
+            title: 'Avanço missionário na África alcança milhares de vidas',
+            excerpt: 'Missionários relatam grande avivamento e conversões em massa em aldeias remotas do continente africano.',
+            image: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800&auto=format&fit=crop&q=60',
+            category: 'Missões',
+            source: 'Gospel Prime',
+            date: new Date().toISOString(),
+            url: '#'
+          },
+          {
+            id: '3',
+            title: 'Igreja inaugura novo templo com capacidade para 5 mil pessoas',
+            excerpt: 'A inauguração contou com a presença de lideranças evangélicas de todo o país e um grande culto de gratidão.',
+            image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=60',
+            category: 'Igreja',
+            source: 'Fuxico Gospel',
+            date: new Date().toISOString(),
+            url: '#'
+          }
+      ]);
+      setIsLoading(false);
+
+      /*
       try {
         const { data, error: fetchError } = await supabase.functions.invoke('fetch-external-news', {
           body: { source }
@@ -37,12 +73,16 @@ export const useExternalNews = (source: 'all' | 'jmnoticia' | 'fuxicogospel' = '
           setNews([]);
         }
       } catch (err) {
-        console.error('Error fetching external news:', err);
-        setError(err instanceof Error ? err.message : 'Erro ao carregar notícias');
-        setNews([]);
+         console.warn('Using offline fallback for external news');
+         // Mock data for offline mode
+         setNews([
+           // ... (same mock data as above)
+         ]);
+         setError(null);
       } finally {
         setIsLoading(false);
       }
+      */
     };
 
     fetchNews();

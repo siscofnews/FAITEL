@@ -1,0 +1,30 @@
+section,row_ord,label,column_name,width,ord,format,description
+header,1,NOME,LABEL,10,1,TEXT,Rótulo
+header,1,,NOME,60,2,TEXT,Nome da empresa
+header,2,CNPJ,LABEL,10,1,TEXT,Rótulo
+header,2,,CNPJ,14,2,NUM,Documento numérico
+header,2,,CNPJ_MATRIZ,14,3,NUM,CNPJ da matriz
+header,2,,CNPJ_FILIAL,14,4,NUM,CNPJ da filial
+header,3,IE,LABEL,10,1,TEXT,Rótulo
+header,3,,IE,14,2,NUM,Inscrição estadual
+header,3,IM,LABEL,10,3,TEXT,Rótulo
+header,3,,IM,14,4,NUM,Inscrição municipal
+header,4,ENDERECO,LABEL,10,1,TEXT,Rótulo
+header,4,,ENDERECO,80,2,TEXT,Endereço
+header,5,PERIODO,LABEL,10,1,TEXT,Rótulo
+header,5,,PERIODO,30,2,TEXT,Período
+header,6,TEXTO_FUNDO,LABEL,30,1,CONST:ARQUIVO GERADO PELO SISCOF,Texto fixo
+body,1,,CONTA,20,1,TEXT,Código contábil com zero-padding
+body,1,,CENTRO_CUSTO,20,2,TEXT,Código do centro com zero-padding
+body,1,,DEBITO,15,3,DECIMAL,Valor debitado
+body,1,,CREDITO,15,4,DECIMAL,Valor creditado
+body,1,,HISTORICO,120,5,TEXT,Descrição normalizada
+body,1,,DATA,10,6,DATE_DDMMYYYY,Data do lançamento
+footer,1,DEBITO_TOTAL,LABEL,10,1,TEXT,Rótulo
+footer,1,,DEBITO_TOTAL,15,2,DECIMAL,Soma débitos
+footer,1,CREDITO_TOTAL,LABEL,10,3,TEXT,Rótulo
+footer,1,,CREDITO_TOTAL,15,4,DECIMAL,Soma créditos
+footer,1,LINHAS,LABEL,10,5,TEXT,Rótulo
+footer,1,,LINHAS,10,6,NUM,Contagem linhas
+footer,2,SIGNATURE_SHA256,LABEL,30,1,TEXT,Assinatura hash
+footer,2,,SIGNATURE_SHA256,64,2,HEX,Hash SHA-256

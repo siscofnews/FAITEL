@@ -35,50 +35,51 @@ export default function MinhasTurmas() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        loadEnrollments();
-    }, []);
+        const loadEnrollments = async () => {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) throw new Error("Não autenticado");
 
-    const loadEnrollments = async () => {
-        try {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error("Não autenticado");
-
-            // Load enrollments
-            const { data: enrollmentsData, error: enrollmentsError } = await supabase
-                .from("course_enrollments")
-                .select("*")
-                .eq("student_id", user.id)
-                .order("enrollment_date", { ascending: false });
-
-            if (enrollmentsError) throw enrollmentsError;
-            setEnrollments(enrollmentsData || []);
-
-            // Load classes details
-            if (enrollmentsData) {
-                const classIds = [...new Set(enrollmentsData.map((e) => e.class_id))];
-                const { data: classesData, error: classesError } = await supabase
-                    .from("course_classes")
+                // Load enrollments
+                const { data: enrollmentsData, error: enrollmentsError } = await supabase
+                    .from("course_enrollments")
                     .select("*")
-                    .in("id", classIds);
+                    .eq("student_id", user.id)
+                    .order("enrollment_date", { ascending: false });
 
-                if (classesError) throw classesError;
+                if (enrollmentsError) throw enrollmentsError;
+                setEnrollments(enrollmentsData || []);
 
-                const classesMap: Record<string, Class> = {};
-                classesData?.forEach((c) => {
-                    classesMap[c.id] = c;
+                // Load classes details
+                if (enrollmentsData) {
+                    const classIds = [...new Set(enrollmentsData.map((e) => e.class_id))];
+                    const { data: classesData, error: classesError } = await supabase
+                        .from("course_classes")
+                        .select("*")
+                        .in("id", classIds);
+
+                    if (classesError) throw classesError;
+
+                    const classesMap: Record<string, Class> = {};
+                    classesData?.forEach((c) => {
+                        classesMap[c.id] = c;
+                    });
+                    setClasses(classesMap);
+                }
+            } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
+                toast({
+                    title: "Erro ao carregar turmas",
+                    description: errorMessage,
+                    variant: "destructive",
                 });
-                setClasses(classesMap);
+            } finally {
+                setLoading(false);
             }
-        } catch (error: any) {
-            toast({
-                title: "Erro ao carregar turmas",
-                description: error.message,
-                variant: "destructive",
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
+        };
+
+        loadEnrollments();
+    }, [toast]);
 
     const getStatusBadge = (status: string) => {
         const variants: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {

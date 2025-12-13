@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, Users, Calendar, Clock, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { sendWelcomeEmail } from "@/services/EmailService";
 
 interface CourseClass {
     id: string;
@@ -91,7 +92,7 @@ export default function MatricularTurma() {
         }
     };
 
-    const handleEnroll = async () => {
+  const handleEnroll = async () => {
         if (!selectedClass) {
             toast({
                 title: "Selecione uma turma",
@@ -138,6 +139,30 @@ export default function MatricularTurma() {
                 ]);
 
             if (error) throw error;
+
+            try {
+                const { data: course } = await supabase.from('courses').select('name').eq('id', courseId).single();
+                const studentName = user.email?.split('@')[0] || 'Aluno';
+                const courseName = course?.name || 'Curso';
+                let subject = `Bem-vindo(a) ao curso ${courseName}`;
+                let template = `Olá {{student_name}},\n\nSeja muito bem-vindo(a) à FAITEL!\n\nÉ uma alegria tê-lo(a) conosco neste curso {{course_name}}. Nossa missão é servir com excelência.\n\nAssinado,\nChanceler Valdinei da Conceição Santos`;
+                try {
+                    const { data: tpl } = await supabase.from('welcome_email_templates' as any).select('*').eq('target_type','COURSE').eq('target_id', courseId).maybeSingle();
+                    if (tpl) { subject = tpl.subject || subject; template = tpl.template || template; }
+                    else {
+                        const { data: gtpl } = await supabase.from('welcome_email_templates' as any).select('*').eq('target_type','GLOBAL').maybeSingle();
+                        if (gtpl) { subject = gtpl.subject || subject; template = gtpl.template || template; }
+                        else {
+                            const local = JSON.parse(localStorage.getItem('welcome_templates')||'{}');
+                            const kCourse = `COURSE:${courseId}`; const kGlobal = 'GLOBAL';
+                            if (local[kCourse]) { subject = local[kCourse].subject || subject; template = local[kCourse].template || template; }
+                            else if (local[kGlobal]) { subject = local[kGlobal].subject || subject; template = local[kGlobal].template || template; }
+                        }
+                    }
+                } catch {}
+                const body = template.replace(/\{\{student_name\}\}/g, studentName).replace(/\{\{course_name\}\}/g, courseName);
+                await sendWelcomeEmail(user.email || '', subject, body);
+            } catch {}
 
             toast({
                 title: "Matrícula realizada!",

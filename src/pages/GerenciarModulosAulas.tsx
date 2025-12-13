@@ -18,8 +18,10 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Plus, Edit, Trash2, ArrowLeft, Video, FileText, Upload } from "lucide-react";
+import { Plus, Edit, Trash2, ArrowLeft, Video, FileText, Upload, File } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 interface Module {
     id: string;
@@ -33,7 +35,9 @@ interface Lesson {
     module_id: string;
     name: string;
     description: string;
-    video_url: string | null;
+    content_type: 'video' | 'pdf';
+    content_url: string | null;
+    video_url?: string | null; // Keep for backward compatibility if needed
     video_duration_minutes: number;
     order_index: number;
 }
@@ -60,9 +64,11 @@ export default function GerenciarModulosAulas() {
     const [lessonForm, setLessonForm] = useState({
         name: "",
         description: "",
-        video_url: "",
+        content_type: 'video' as 'video' | 'pdf',
+        content_url: "",
         video_duration_minutes: 0,
     });
+    const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         if (courseId) {
@@ -172,12 +178,67 @@ export default function GerenciarModulosAulas() {
         }
     };
 
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (file.type !== 'application/pdf') {
+            toast({
+                title: "Arquivo inválido",
+                description: "Por favor, selecione um arquivo PDF",
+                variant: "destructive"
+            });
+            return;
+        }
+
+        setUploading(true);
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${courseId}/${Date.now()}.${fileExt}`;
+            
+            // Try uploading to 'course-content' bucket
+            // Note: Ensure this bucket exists and is public
+            const { error: uploadError } = await supabase.storage
+                .from('course-content')
+                .upload(fileName, file);
+
+            if (uploadError) {
+                // Fallback to church-logos if course-content doesn't exist (temporary hack, better to handle properly)
+                // But let's throw error to see what happens or guide user
+                throw uploadError;
+            }
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('course-content')
+                .getPublicUrl(fileName);
+
+            setLessonForm(prev => ({ ...prev, content_url: publicUrl }));
+            toast({
+                title: "Arquivo enviado!",
+                description: "PDF carregado com sucesso."
+            });
+        } catch (error: any) {
+            console.error("Upload error:", error);
+            toast({
+                title: "Erro no upload",
+                description: "Erro ao enviar arquivo. Verifique se o bucket 'course-content' existe e é público.",
+                variant: "destructive"
+            });
+        } finally {
+            setUploading(false);
+        }
+    };
+
     const handleSaveLesson = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
             const lessonData = {
-                ...lessonForm,
+                name: lessonForm.name,
+                description: lessonForm.description,
+                content_type: lessonForm.content_type,
+                content_url: lessonForm.content_url,
+                video_duration_minutes: lessonForm.video_duration_minutes,
                 module_id: selectedModuleId,
                 order_index: editingLesson
                     ? editingLesson.order_index
@@ -268,7 +329,8 @@ export default function GerenciarModulosAulas() {
             setLessonForm({
                 name: lesson.name,
                 description: lesson.description,
-                video_url: lesson.video_url || "",
+                content_type: lesson.content_type || (lesson.video_url ? 'video' : 'pdf'),
+                content_url: lesson.content_url || lesson.video_url || "",
                 video_duration_minutes: lesson.video_duration_minutes,
             });
         } else {
@@ -283,7 +345,7 @@ export default function GerenciarModulosAulas() {
     };
 
     const resetLessonForm = () => {
-        setLessonForm({ name: "", description: "", video_url: "", video_duration_minutes: 0 });
+        setLessonForm({ name: "", description: "", content_type: 'video', content_url: "", video_duration_minutes: 0 });
         setEditingLesson(null);
     };
 
@@ -479,35 +541,97 @@ export default function GerenciarModulosAulas() {
                                 <Textarea
                                     value={lessonForm.description}
                                     onChange={(e) => setLessonForm({ ...lessonForm, description: e.target.value })}
-                                    rows={2}
+                                    rows={3}
                                 />
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-2">
-                                    URL do Vídeo (YouTube, Vimeo, etc)
-                                </label>
-                                <Input
-                                    value={lessonForm.video_url}
-                                    onChange={(e) => setLessonForm({ ...lessonForm, video_url: e.target.value })}
-                                    placeholder="https://youtube.com/watch?v=..."
-                                />
+
+                            <div className="space-y-3">
+                                <Label>Tipo de Conteúdo</Label>
+                                <RadioGroup
+                                    value={lessonForm.content_type}
+                                    onValueChange={(value: 'video' | 'pdf') => 
+                                        setLessonForm({ ...lessonForm, content_type: value, content_url: "" })
+                                    }
+                                    className="flex space-x-4"
+                                >
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="video" id="video" />
+                                        <Label htmlFor="video" className="flex items-center cursor-pointer">
+                                            <Video className="h-4 w-4 mr-2" />
+                                            Vídeo
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="pdf" id="pdf" />
+                                        <Label htmlFor="pdf" className="flex items-center cursor-pointer">
+                                            <FileText className="h-4 w-4 mr-2" />
+                                            PDF / Material
+                                        </Label>
+                                    </div>
+                                </RadioGroup>
                             </div>
+
+                            {lessonForm.content_type === 'video' ? (
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Link do Vídeo (YouTube/Vimeo)</label>
+                                    <Input
+                                        value={lessonForm.content_url}
+                                        onChange={(e) => setLessonForm({ ...lessonForm, content_url: e.target.value })}
+                                        placeholder="https://youtube.com/..."
+                                    />
+                                </div>
+                            ) : (
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Arquivo PDF</label>
+                                    <div className="flex gap-2">
+                                        <div className="relative flex-1">
+                                            <Input
+                                                type="file"
+                                                accept=".pdf"
+                                                onChange={handleFileUpload}
+                                                className="hidden"
+                                                id="file-upload"
+                                                disabled={uploading}
+                                            />
+                                            <Label 
+                                                htmlFor="file-upload"
+                                                className={`flex items-center justify-center w-full h-10 px-4 border rounded-md cursor-pointer hover:bg-gray-50 ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                            >
+                                                {uploading ? (
+                                                    <span>Enviando...</span>
+                                                ) : (
+                                                    <>
+                                                        <Upload className="h-4 w-4 mr-2" />
+                                                        {lessonForm.content_url ? "Trocar Arquivo" : "Selecionar PDF"}
+                                                    </>
+                                                )}
+                                            </Label>
+                                        </div>
+                                    </div>
+                                    {lessonForm.content_url && (
+                                        <p className="text-sm text-green-600 mt-2 flex items-center">
+                                            <FileText className="h-3 w-3 mr-1" />
+                                            Arquivo vinculado com sucesso
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+
                             <div>
-                                <label className="block text-sm font-medium mb-2">Duração (minutos)</label>
+                                <label className="block text-sm font-medium mb-2">Duração (minutos) {lessonForm.content_type === 'pdf' ? '(Estimada)' : ''}</label>
                                 <Input
                                     type="number"
                                     value={lessonForm.video_duration_minutes}
-                                    onChange={(e) =>
-                                        setLessonForm({ ...lessonForm, video_duration_minutes: parseInt(e.target.value) })
-                                    }
-                                    min="1"
+                                    onChange={(e) => setLessonForm({ ...lessonForm, video_duration_minutes: parseInt(e.target.value) })}
                                 />
                             </div>
                             <div className="flex gap-2 justify-end">
                                 <Button type="button" variant="outline" onClick={() => setLessonDialogOpen(false)}>
                                     Cancelar
                                 </Button>
-                                <Button type="submit">Salvar</Button>
+                                <Button type="submit" disabled={uploading}>
+                                    {uploading ? "Aguarde..." : "Salvar"}
+                                </Button>
                             </div>
                         </form>
                     </DialogContent>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Play,
@@ -25,7 +25,8 @@ import {
   Church,
   Mic,
   BookOpen,
-  Globe
+  Globe,
+  ChevronDown
 } from "lucide-react";
 import { VisitorCounter } from "@/components/portal/VisitorCounter";
 import { Button } from "@/components/ui/button";
@@ -44,12 +45,16 @@ import { RadioBanner } from "@/components/portal/RadioBanner";
 import { FutureTempleBanner } from "@/components/portal/FutureTempleBanner";
 import { BooksSection } from "@/components/portal/BooksSection";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useEvangelicalNews } from "@/hooks/useEvangelicalNews";
 import { TranslatedText } from "@/components/TranslatedText";
 import { GospelEventsSection } from "@/components/portal/GospelEventsSection";
 import logoSiscof from "@/assets/logo-siscof.png";
 import santaCeiaIadma from "@/assets/eventos/santa-ceia-iadma.jpg";
 import pauloLucasMemorial from "@/assets/eventos/paulo-lucas-memorial.jpg";
+import { loadAgendaPublica } from "@/wiring/agenda";
+import { format, parseISO } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 const featuredNews = {
   id: 1,
@@ -190,6 +195,28 @@ export default function Portal() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { news, isLoading: newsLoading } = useEvangelicalNews();
+  const [featuredEvents, setFeaturedEvents] = useState<any[]>([]);
+  const [eventsLoading, setEventsLoading] = useState(true);
+
+  useEffect(() => {
+    const run = async () => {
+      setEventsLoading(true);
+      try {
+        const data = await loadAgendaPublica();
+        const today = new Date();
+        const upcoming = (data || [])
+          .filter((ev: any) => {
+            try { return parseISO(ev.data_inicio) >= today; } catch { return false; }
+          })
+          .sort((a: any, b: any) => parseISO(a.data_inicio).getTime() - parseISO(b.data_inicio).getTime())
+          .slice(0, 3);
+        setFeaturedEvents(upcoming);
+      } finally {
+        setEventsLoading(false);
+      }
+    };
+    run();
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -217,19 +244,17 @@ export default function Portal() {
         <div className="container mx-auto px-4 flex items-center justify-between text-sm">
           <div className="flex items-center gap-4">
             <span className="hidden md:inline">📅 {new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-            <div className="hidden sm:flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-gold" />
-              <span className="text-gold font-medium"><TranslatedText>Trending:</TranslatedText></span>
-              <span className="truncate max-w-[200px]">{trendingTopics[0]}</span>
-            </div>
           </div>
-          <div className="flex items-center gap-3">
-            {/* Language Selector - Prominent Position */}
+          <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap">
             <LanguageSelector />
-            <Link to="/login" className="hover:text-gold transition-colors hidden sm:inline"><TranslatedText>Entrar</TranslatedText></Link>
-            <Link to="/cadastrar-igreja" className="bg-gold text-navy px-3 py-1 rounded-full text-xs font-semibold hover:bg-gold/90 transition-colors hidden sm:inline">
-              <TranslatedText>Cadastre sua Igreja</TranslatedText>
-            </Link>
+            <Link to="/login"><Button variant="gold" size="sm">Login Sistema</Button></Link>
+            <Link to="/login?target=faculdade"><Button variant="gold" size="sm">Login Faculdade</Button></Link>
+            <Link to="/login?target=convencao"><Button variant="gold" size="sm">Login Convenção</Button></Link>
+            <Link to="/login?target=super"><Button variant="gold" size="sm">Super Admin</Button></Link>
+            <Link to="/ead/aluno/login"><Button variant="gold" size="sm">Área do Aluno</Button></Link>
+            <Link to="/admin/faculdades/matriz?demo=1"><Button variant="gold" size="sm">Visitar Faculdade</Button></Link>
+            <Link to="/admin/convencoes/estaduais?demo=1"><Button variant="gold" size="sm">Visitar Convenção</Button></Link>
+            <Link to="/cadastrar-igreja"><Button variant="gold" size="sm">Cadastre sua Igreja</Button></Link>
           </div>
         </div>
       </div>
@@ -237,7 +262,7 @@ export default function Portal() {
       {/* Main Header */}
       <header className="bg-white border-b border-border sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16 md:h-20">
+          <div className="flex items-center justify-between h-16 md:h-20 gap-4">
             {/* Mobile Menu Button */}
             <button
               className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors"
@@ -247,7 +272,7 @@ export default function Portal() {
             </button>
 
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-3">
+            <Link to="/" className="flex items-center gap-3 shrink-0">
               <img
                 src={logoSiscof}
                 alt="SISCOF"
@@ -263,16 +288,17 @@ export default function Portal() {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-2 flex-1 justify-center min-w-0 overflow-x-auto whitespace-nowrap">
               {[
                 { name: "Início", href: "/" },
                 { name: "Notícias", href: "#noticias" },
                 { name: "Eventos", href: "/eventos" },
+                { name: "Agenda Pública", href: "/agenda-publica" },
+                { name: "Agenda CEMADEB", href: "/agenda-publica-cemadeb" },
                 { name: "Galeria AGOs", href: "/galeria-agos" },
                 { name: "Escalas", href: "/consulta-escalas" },
                 { name: "Parceiros", href: "/parceiros" },
-                { name: "Sistema", href: "/dashboard" },
-                { name: "Login", href: "/login" }
+                { name: "Sistema", href: "/dashboard" }
               ].map((item) => (
                 <Link
                   key={item.name}
@@ -285,7 +311,7 @@ export default function Portal() {
             </nav>
 
             {/* Right Actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               {/* Search */}
               <div className={`${searchOpen ? 'flex' : 'hidden'} md:flex items-center`}>
                 <form onSubmit={handleSearch} className="relative">
@@ -328,12 +354,22 @@ export default function Portal() {
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
 
-              {/* Login Button */}
-              <Link to="/login">
-                <Button variant="gold" size="sm" className="hidden sm:flex">
-                  <TranslatedText>Acessar Sistema</TranslatedText>
-                </Button>
-              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="gold" size="sm" className="hidden sm:flex">
+                    <TranslatedText>Acessar</TranslatedText>
+                    <ChevronDown className="h-4 w-4 ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild><Link to="/login">Login Sistema</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/login?target=faculdade">Login Faculdade</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/login?target=convencao">Login Convenção</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/admin/faculdades/matriz?demo=1">Visitar Faculdade</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/admin/convencoes/estaduais?demo=1">Visitar Convenção</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/cadastrar-igreja">Cadastre sua Igreja</Link></DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
@@ -346,10 +382,11 @@ export default function Portal() {
                 { name: "Início", href: "/" },
                 { name: "Notícias", href: "#noticias" },
                 { name: "Eventos", href: "/eventos" },
+                { name: "Agenda Pública", href: "/agenda-publica" },
                 { name: "Escalas", href: "/consulta-escalas" },
                 { name: "Parceiros", href: "/parceiros" },
-                { name: "Sistema", href: "/dashboard" },
-                { name: "Login", href: "/login" }
+                { name: "Agenda CEMADEB", href: "/agenda-publica-cemadeb" },
+                { name: "Sistema", href: "/dashboard" }
               ].map((item) => (
                 <Link
                   key={item.name}
@@ -379,6 +416,22 @@ export default function Portal() {
           </div>
         )}
       </header>
+
+      {/* Quick Access Badges */}
+      <section className="bg-white border-b border-border py-3">
+        <div className="container mx-auto px-4 flex flex-wrap items-center gap-2 justify-center">
+          <Link to="/agenda-publica">
+            <Badge className="bg-gold text-navy px-3 py-1 hover:bg-gold/90 transition-colors cursor-pointer">
+              Agenda Pública
+            </Badge>
+          </Link>
+          <Link to="/agenda-publica-cemadeb">
+            <Badge className="bg-purple-600 text-white px-3 py-1 hover:bg-purple-700 transition-colors cursor-pointer">
+              CEMADEB – Agenda
+            </Badge>
+          </Link>
+        </div>
+      </section>
 
       {/* Breaking News Ticker */}
       <div className="bg-gradient-to-r from-red-600 to-red-500 text-white py-2 overflow-hidden">
@@ -568,6 +621,14 @@ export default function Portal() {
                     <p className="text-white/80 text-sm md:text-base mb-4 line-clamp-2">
                       {featuredNews.excerpt}
                     </p>
+                    <div className="flex gap-2 mb-3">
+                      <Link to="/agenda-publica">
+                        <Badge className="bg-gold text-navy px-3 py-1 hover:bg-gold/90 transition-colors">Agenda Pública</Badge>
+                      </Link>
+                      <Link to="/agenda-publica-cemadeb">
+                        <Badge className="bg-purple-600 text-white px-3 py-1 hover:bg-purple-700 transition-colors">CEMADEB – Agenda</Badge>
+                      </Link>
+                    </div>
                     <div className="flex items-center gap-4 text-white/70 text-sm">
                       <span>{featuredNews.author}</span>
                       <span>•</span>
@@ -638,6 +699,56 @@ export default function Portal() {
           </div>
         </section>
 
+        {/* Featured Events Section */}
+        <section className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+              <span className="w-1 h-8 bg-purple-600 rounded-full"></span>
+              Eventos em Destaque
+            </h2>
+            <Link to="/agenda-publica" className="text-purple-600 hover:underline flex items-center gap-1 font-medium">
+              Ver todos
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+          </div>
+          {eventsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[1,2,3].map(i => (
+                <Card key={i} className="h-40"><CardContent className="h-full animate-pulse" /></Card>
+              ))}
+            </div>
+          ) : featuredEvents.length === 0 ? (
+            <Card><CardContent className="p-6">Nenhum evento futuro publicado.</CardContent></Card>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {featuredEvents.map(ev => (
+                <Card key={ev.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge variant="outline" className="text-xs">
+                        {format(parseISO(ev.data_inicio), "dd/MM/yyyy", { locale: ptBR })}
+                      </Badge>
+                      {ev.cor && <span className="w-2 h-2 rounded-full" style={{ backgroundColor: ev.cor }} />}
+                    </div>
+                    <h3 className="text-lg font-bold mb-1">{ev.nome_evento || ev.titulo}</h3>
+                    {ev.local && (
+                      <p className="text-sm text-muted-foreground flex items-center gap-1"><MapPin className="w-3 h-3" /> {ev.local}</p>
+                    )}
+                    <div className="mt-4 flex gap-2">
+                      <Link to="/agenda-publica">
+                        <Button variant="outline" size="sm">Detalhes</Button>
+                      </Link>
+                      {ev.is_cemadeb && (
+                        <Badge className="bg-purple-600 text-white">CEMADEB</Badge>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </section>
+
         {/* System Promotion Video Section */}
         <section className="mb-12">
           <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl overflow-hidden shadow-2xl relative">
@@ -666,6 +777,16 @@ export default function Portal() {
                     <Link to="/cadastrar-igreja">
                       <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 w-full sm:w-auto h-14 text-lg">
                         Testar Grátis Agora
+                      </Button>
+                    </Link>
+                    <Link to="/agenda-publica">
+                      <Button size="lg" variant="outline" className="border-gold text-gold hover:bg-gold/10 w-full sm:w-auto h-14 text-lg">
+                        Agenda Pública
+                      </Button>
+                    </Link>
+                    <Link to="/agenda-publica-cemadeb">
+                      <Button size="lg" variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50 w-full sm:w-auto h-14 text-lg">
+                        CEMADEB
                       </Button>
                     </Link>
                   </div>

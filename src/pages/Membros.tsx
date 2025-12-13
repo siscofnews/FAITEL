@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,6 +57,8 @@ import {
 import { cn } from "@/lib/utils";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { getUserScopeStates } from "@/wiring/accessScope";
 import { useSearchParams, Link } from "react-router-dom";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -96,6 +98,7 @@ export default function Membros() {
   const [searchParams] = useSearchParams();
   const churchId = searchParams.get("igreja");
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
@@ -106,12 +109,21 @@ export default function Membros() {
   const [deletingMember, setDeletingMember] = useState<any>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [permissionsTarget, setPermissionsTarget] = useState<{ id: string; full_name: string; user_id: string; church_id: string } | null>(null);
+  const [scopeStates, setScopeStates] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      if (user?.id) {
+        try { setScopeStates(await getUserScopeStates(user.id)); } catch {}
+      }
+    })();
+  }, [user?.id]);
 
   // Function to fetch all members for export
   const fetchMembersForExport = async () => {
     let query = supabase
       .from("members")
-      .select("full_name, email, phone, gender, birth_date, city, state, role, department, baptized, membership_date, is_active, churches!inner(nome_fantasia)");
+      .select("full_name, email, phone, gender, birth_date, city, state, role, department, baptized, membership_date, is_active, churches!inner(nome_fantasia,estado)");
 
     if (churchId) {
       query = query.eq("church_id", churchId);
@@ -121,6 +133,9 @@ export default function Membros() {
     }
     if (statusFilter !== "all") {
       query = query.eq("is_active", statusFilter === "active");
+    }
+    if (scopeStates.length) {
+      query = query.in("churches.estado", scopeStates);
     }
 
     const { data, error } = await query.order("full_name");
@@ -158,11 +173,11 @@ export default function Membros() {
 
   // Fetch members
   const { data: membersData, isLoading, error } = useQuery({
-    queryKey: ["members", churchId, searchTerm, roleFilter, statusFilter, currentPage],
+    queryKey: ["members", churchId, searchTerm, roleFilter, statusFilter, currentPage, scopeStates.join(";")],
     queryFn: async () => {
       let query = supabase
         .from("members")
-        .select("*, churches!inner(nome_fantasia)", { count: "exact" });
+        .select("*, churches!inner(nome_fantasia,estado)", { count: "exact" });
 
       if (churchId) {
         query = query.eq("church_id", churchId);
@@ -178,6 +193,9 @@ export default function Membros() {
 
       if (statusFilter !== "all") {
         query = query.eq("is_active", statusFilter === "active");
+      }
+      if (scopeStates.length) {
+        query = query.in("churches.estado", scopeStates);
       }
 
       const from = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -230,7 +248,7 @@ export default function Membros() {
 
   // Calculate pending count
   const { data: pendingCount } = useQuery({
-    queryKey: ["members-pending-count", churchId],
+    queryKey: ["members-pending-count", churchId, scopeStates.join(";")],
     queryFn: async () => {
       let query = supabase
         .from("members")
@@ -239,6 +257,10 @@ export default function Membros() {
 
       if (churchId) {
         query = query.eq("church_id", churchId);
+      } else if (scopeStates.length) {
+        // Filter by accessible churches by state via join
+        const { data: ids } = await supabase.rpc('get_accessible_church_ids', { _user_id: user?.id });
+        if (ids && ids.length) query = query.in('church_id', ids as any);
       }
 
       const { count, error } = await query;

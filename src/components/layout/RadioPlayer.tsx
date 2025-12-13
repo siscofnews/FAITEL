@@ -22,8 +22,20 @@ export function RadioPlayer() {
             if (audioRef.current) {
                 try {
                     audioRef.current.volume = volume[0] / 100;
-                    await audioRef.current.play();
-                    setIsPlaying(true);
+                    // Check if the stream URL is valid/accessible before trying to play to avoid immediate errors
+                    // However, standard HTMLAudioElement handles this via onError.
+                    
+                    const playPromise = audioRef.current.play();
+                    
+                    if (playPromise !== undefined) {
+                         playPromise.then(() => {
+                            setIsPlaying(true);
+                         }).catch(err => {
+                            console.log("Autoplay blocked or stream unavailable, waiting for user interaction", err);
+                            setIsPlaying(false);
+                            // If it's a real network error, onError will also trigger
+                         });
+                    }
                 } catch (err) {
                     console.log("Autoplay blocked, waiting for user interaction", err);
                     setIsPlaying(false);
@@ -35,14 +47,15 @@ export function RadioPlayer() {
         // Setup error handling to try to reconnect
         const audio = audioRef.current;
         if (audio) {
-            audio.addEventListener('error', (e) => {
-                console.error("Audio Error", e);
+            const errorHandler = (e: Event) => {
+                console.warn("Audio Stream Error or Offline", e);
                 setError(true);
-            });
-        }
-
-        return () => {
-            if (audio) {
+                setIsPlaying(false);
+            };
+            audio.addEventListener('error', errorHandler);
+            
+            return () => {
+                audio.removeEventListener('error', errorHandler);
                 audio.pause();
                 audio.src = ""; // Cleanup
             }

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useAuth } from "@/contexts/AuthContext";
+import { getUserScopeStates } from "@/wiring/accessScope";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,6 +23,7 @@ interface Church {
 export default function ListaIgrejas() {
     const navigate = useNavigate();
     const { userLevel, isSuperAdmin } = usePermissions();
+    const { user } = useAuth();
     const [churches, setChurches] = useState<Church[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -32,10 +35,12 @@ export default function ListaIgrejas() {
         setIsLoading(true);
         try {
             // Super admin vê todas, outros veem apenas sua hierarquia
-            let query = supabase
+            const states = user?.id ? await getUserScopeStates(user.id) : [];
+            const query = supabase
                 .from('churches')
                 .select('*')
                 .eq('is_active', true)
+                .in(states && states.length ? 'estado' : 'id', states && states.length ? states : undefined as any)
                 .order('nivel')
                 .order('nome_fantasia');
 

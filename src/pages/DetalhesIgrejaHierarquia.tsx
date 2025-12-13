@@ -506,6 +506,11 @@ export default function DetalhesIgrejaHierarquia() {
                         }}>
                             <Users className="h-6 w-6" /> <span className="text-sm">Novo Membro</span>
                         </Button>
+                        <Button className="h-24 flex flex-col gap-2" variant="outline" onClick={() => {
+                            if (id) navigate(`/perfis-locais/${id}`);
+                        }}>
+                            <Users className="h-6 w-6" /> <span className="text-sm">Perfis Locais</span>
+                        </Button>
                     </div>
                 </CardContent>
             </Card>

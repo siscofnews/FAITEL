@@ -41,6 +41,16 @@ export default function SiscofAssistant() {
     const [isListening, setIsListening] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const recognitionRef = useRef<any>(null);
+    const [pos, setPos] = useState<{ x: number; y: number }>(() => {
+        if (typeof window === 'undefined') return { x: 24, y: 24 };
+        try {
+            const raw = localStorage.getItem('siscof_assistant_pos');
+            if (raw) { const p = JSON.parse(raw); return { x: p.x || 24, y: p.y || window.innerHeight - 96 }; }
+        } catch {}
+        return { x: 24, y: window.innerHeight - 96 };
+    });
+    const draggingRef = useRef(false);
+    const dragOffsetRef = useRef<{ dx: number; dy: number }>({ dx: 0, dy: 0 });
 
     useEffect(() => {
         scrollToBottom();
@@ -223,20 +233,49 @@ export default function SiscofAssistant() {
         }
     };
 
+    const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
+    const onPointerDown = (e: React.PointerEvent) => {
+        draggingRef.current = true;
+        dragOffsetRef.current = { dx: e.clientX - pos.x, dy: e.clientY - pos.y };
+        const onMove = (ev: PointerEvent) => {
+            if (!draggingRef.current) return;
+            const nx = clamp(ev.clientX - dragOffsetRef.current.dx, 8, window.innerWidth - 72);
+            const ny = clamp(ev.clientY - dragOffsetRef.current.dy, 8, window.innerHeight - 72);
+            setPos({ x: nx, y: ny });
+        };
+        const onUp = () => {
+            draggingRef.current = false;
+            try { localStorage.setItem('siscof_assistant_pos', JSON.stringify(pos)); } catch {}
+            window.removeEventListener('pointermove', onMove);
+            window.removeEventListener('pointerup', onUp);
+        };
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
+    };
+
     if (!isOpen) {
         return (
-            <Button
-                onClick={() => setIsOpen(true)}
-                size="lg"
-                className="fixed bottom-6 right-6 w-16 h-16 rounded-full shadow-2xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 z-50 transition-all duration-300 hover:scale-110"
-            >
-                <MessageCircle className="w-8 h-8" />
-            </Button>
+            <div style={{ position: 'fixed', top: pos.y, left: pos.x, zIndex: 60 }} onPointerDown={onPointerDown}>
+                <Button
+                    onClick={() => { if (!draggingRef.current) setIsOpen(true); }}
+                    size="lg"
+                    className="w-16 h-16 rounded-full shadow-2xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110"
+                >
+                    <MessageCircle className="w-8 h-8" />
+                </Button>
+            </div>
         );
     }
 
+    const PANEL_HEIGHT = isMinimized ? 64 : 420;
+    const CARD_WIDTH = 320;
+    const TOP_SAFE = 120; // evita ficar escondido sob os banners fixos
+    const cardLeft = clamp(pos.x, 8, (typeof window !== 'undefined' ? window.innerWidth : 1200) - CARD_WIDTH - 8);
+    const openBelow = pos.y < TOP_SAFE + PANEL_HEIGHT / 2;
+    const proposedTop = openBelow ? (pos.y + 16) : (pos.y - PANEL_HEIGHT - 16);
+    const cardTop = clamp(proposedTop, TOP_SAFE, (typeof window !== 'undefined' ? window.innerHeight : 800) - PANEL_HEIGHT - 8);
     return (
-        <Card className={`fixed bottom-6 right-6 w-96 shadow-2xl z-50 transition-all duration-300 ${isMinimized ? 'h-16' : 'h-[600px]'}`}>
+        <Card className={`shadow-2xl transition-all duration-300 rounded-xl`} style={{ position: 'fixed', left: cardLeft, top: cardTop, zIndex: 60, width: CARD_WIDTH, height: PANEL_HEIGHT }}>
             <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 rounded-t-xl">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -254,12 +293,12 @@ export default function SiscofAssistant() {
                             {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
                         </Button>
                         <Button
-                            size="icon"
+                            size="sm"
                             variant="ghost"
                             onClick={() => setIsOpen(false)}
-                            className="text-white hover:bg-white/20 w-8 h-8"
+                            className="text-white hover:bg-white/20 h-8 px-3"
                         >
-                            <X className="w-4 h-4" />
+                            Fechar
                         </Button>
                     </div>
                 </div>

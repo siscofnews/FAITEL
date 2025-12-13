@@ -21,7 +21,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChurchHierarchyTree } from "@/components/igrejas/ChurchHierarchyTree";
 import { ChurchMovementHistory } from "@/components/igrejas/ChurchMovementHistory";
@@ -30,6 +30,8 @@ import { exportToCSV, exportToExcel } from "@/lib/export-utils";
 import { toast } from "sonner";
 import { IgrejaEditForm } from "@/components/igrejas/IgrejaEditForm";
 import { ChurchPosterGenerator } from "@/components/igrejas/ChurchPosterGenerator";
+import { useAuth } from "@/contexts/AuthContext";
+import { getUserScopeStates } from "@/wiring/accessScope";
 
 interface IgrejaPublica {
   id: string;
@@ -58,11 +60,21 @@ const typeConfig = {
 
 export default function Igrejas() {
   const { isSuperAdmin, isAdmin } = usePermissions();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState<string>("todos");
   const [viewMode, setViewMode] = useState<"cards" | "tree">("cards");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [scopeStates, setScopeStates] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      if (user?.id) {
+        try { setScopeStates(await getUserScopeStates(user.id)); } catch {}
+      }
+    })();
+  }, [user?.id]);
 
   // States for Edit/Delete
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -110,7 +122,8 @@ export default function Igrejas() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("churches_public")
-        .select("id, nome_fantasia, cidade, estado, nivel, logo_url, endereco, telefone, email, pastor_presidente_nome");
+        .select("id, nome_fantasia, cidade, estado, nivel, logo_url, endereco, telefone, email, pastor_presidente_nome")
+        .in(scopeStates.length ? 'estado' : 'id', scopeStates.length ? scopeStates : undefined as any);
 
       if (error) throw error;
       return data as IgrejaPublica[];
@@ -126,7 +139,8 @@ export default function Igrejas() {
         .from("churches")
         .select("id, nome_fantasia, cidade, estado, nivel, logo_url, parent_church_id, endereco, telefone, email, pastor_presidente_nome")
         .eq("is_approved", true)
-        .eq("is_active", true);
+        .eq("is_active", true)
+        .in(scopeStates.length ? 'estado' : 'id', scopeStates.length ? scopeStates : undefined as any);
 
       if (error) throw error;
       return data as IgrejaComHierarquia[];

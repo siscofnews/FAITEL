@@ -50,7 +50,7 @@ export function ConviteForm({ open, onOpenChange, onSuccess }: ConviteFormProps)
       
       setLoadingChurches(true);
       
-      let query = supabase
+      const query = supabase
         .from("churches")
         .select("id, nome_fantasia")
         .eq("is_active", true)

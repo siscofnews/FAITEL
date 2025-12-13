@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { grantCreatorDefaultRoles, seedTemplatesForChurchLevel } from "@/wiring/permissions";
 import { createClient } from "@supabase/supabase-js";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,6 +16,7 @@ export default function CriarUnidade() {
     const { nivel } = useParams<{ nivel: string }>();
     const navigate = useNavigate();
     const { toast } = useToast();
+    const { user } = useAuth();
 
     // Pega o ID da igreja pai do localStorage (setado na tela anterior)
     const parentChurchId = localStorage.getItem('creating_for_church');
@@ -174,6 +177,11 @@ export default function CriarUnidade() {
                 } catch (userError) {
                     console.error("Erro ao criar conta do pastor:", userError);
                 }
+            }
+
+            await seedTemplatesForChurchLevel(nivel as any);
+            if (user && newChurch?.id) {
+                await grantCreatorDefaultRoles(newChurch.id, user.id, nivel!);
             }
 
             toast({

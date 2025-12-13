@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
 import { Download, Users, Church, UserCheck, UserX, Loader2, CalendarIcon, X } from "lucide-react";
@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Area, AreaChart } from "recharts";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { getUserScopeStates } from "@/wiring/accessScope";
 import { exportToCSV, exportToExcel } from "@/lib/export-utils";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -30,6 +32,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+interface Member {
+  id: string;
+  full_name: string;
+  role: string;
+  is_active: boolean;
+  church_id: string;
+  created_at: string;
+  churches: {
+    id?: string;
+    nome_fantasia: string;
+  } | null;
+  // properties added during processing
+  novos?: number;
+  total?: number;
+}
+
 const roleLabels: Record<string, string> = {
   membro: "Membro",
   obreiro: "Obreiro",
@@ -49,10 +67,20 @@ const COLORS = [
 ];
 
 export default function Relatorios() {
+  const { user } = useAuth();
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [selectedChurchId, setSelectedChurchId] = useState<string>("all");
   const [compareChurches, setCompareChurches] = useState<string[]>([]);
+  const [scopeStates, setScopeStates] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      if (user?.id) {
+        try { setScopeStates(await getUserScopeStates(user.id)); } catch {}
+      }
+    })();
+  }, [user?.id]);
 
   // Fetch churches for filter dropdown
   const { data: churchesData } = useQuery({
@@ -62,6 +90,7 @@ export default function Relatorios() {
         .from("churches")
         .select("id, nome_fantasia, is_active")
         .eq("is_approved", true)
+        .in(scopeStates.length ? "estado" : "id", scopeStates.length ? scopeStates : undefined as any)
         .order("nome_fantasia");
       
       if (error) throw error;
@@ -71,11 +100,11 @@ export default function Relatorios() {
 
   // Fetch all members with church info
   const { data: membersData, isLoading } = useQuery({
-    queryKey: ["members-statistics", startDate?.toISOString(), endDate?.toISOString(), selectedChurchId],
+    queryKey: ["members-statistics", startDate?.toISOString(), endDate?.toISOString(), selectedChurchId, scopeStates.join(";")],
     queryFn: async () => {
       let query = supabase
         .from("members")
-        .select("id, full_name, role, is_active, church_id, created_at, churches!inner(nome_fantasia)");
+        .select("id, full_name, role, is_active, church_id, created_at, churches!inner(nome_fantasia,estado)");
       
       if (startDate) {
         query = query.gte("created_at", startDate.toISOString());
@@ -87,6 +116,9 @@ export default function Relatorios() {
       }
       if (selectedChurchId !== "all") {
         query = query.eq("church_id", selectedChurchId);
+      }
+      if (scopeStates.length) {
+        query = query.in("churches.estado", scopeStates);
       }
       
       const { data, error } = await query;
@@ -101,7 +133,8 @@ export default function Relatorios() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("members")
-        .select("id, full_name, role, is_active, church_id, created_at, churches!inner(id, nome_fantasia)");
+        .select("id, full_name, role, is_active, church_id, created_at, churches!inner(id, nome_fantasia,estado)")
+        .in(scopeStates.length ? "churches.estado" : "id", scopeStates.length ? scopeStates : undefined as any);
       
       if (error) throw error;
       return data || [];
@@ -130,7 +163,7 @@ export default function Relatorios() {
   }));
 
   // Members by church (top 10)
-  const membersByChurch = membersData?.reduce((acc: Record<string, number>, member: any) => {
+  const membersByChurch = membersData?.reduce((acc: Record<string, number>, member: Member) => {
     const churchName = member.churches?.nome_fantasia || "Sem igreja";
     acc[churchName] = (acc[churchName] || 0) + 1;
     return acc;
@@ -154,12 +187,12 @@ export default function Relatorios() {
   // Comparison data for selected churches
   const comparisonData = compareChurches.map((churchId, index) => {
     const church = churchesData?.find(c => c.id === churchId);
-    const churchMembers = allMembersData?.filter((m: any) => m.church_id === churchId) || [];
-    const active = churchMembers.filter((m: any) => m.is_active).length;
+    const churchMembers = (allMembersData as Member[] | undefined)?.filter((m) => m.church_id === churchId) || [];
+    const active = churchMembers.filter((m) => m.is_active).length;
     const inactive = churchMembers.length - active;
     
     // Count by role
-    const roleCount = churchMembers.reduce((acc: Record<string, number>, m: any) => {
+    const roleCount = churchMembers.reduce((acc: Record<string, number>, m) => {
       const role = m.role || "membro";
       acc[role] = (acc[role] || 0) + 1;
       return acc;
@@ -214,7 +247,7 @@ export default function Relatorios() {
     }
     
     // Count members per month
-    membersData.forEach((member: any) => {
+    membersData.forEach((member: Member) => {
       const createdAt = new Date(member.created_at);
       months.forEach((m) => {
         const monthStart = m.date;
@@ -667,7 +700,7 @@ export default function Relatorios() {
                     border: "1px solid hsl(var(--border))",
                     borderRadius: "12px",
                   }}
-                  formatter={(value: number, name: string, props: any) => [value, props.payload.fullName]}
+                  formatter={(value: number, name: string, props: { payload: { fullName: string } }) => [value, props.payload.fullName]}
                   labelFormatter={() => ""}
                 />
                 <Bar 

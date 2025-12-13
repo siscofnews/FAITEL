@@ -8,55 +8,71 @@ import { Progress } from "@/components/ui/progress";
 import { Home, BookOpen, Clock, Award, TrendingUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+interface Enrollment {
+  id: string;
+  status: string;
+  progress_percentage: number;
+  class?: {
+    name: string;
+    course?: {
+      id: string;
+      name: string;
+    };
+  };
+}
+
 export default function MeusCursos() {
     const navigate = useNavigate();
     const { toast } = useToast();
-    const [enrollments, setEnrollments] = useState<any[]>([]);
+    const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        loadMyEnrollments();
-    }, []);
+        const loadMyEnrollments = async () => {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) throw new Error("Usuário não autenticado");
 
-    const loadMyEnrollments = async () => {
-        try {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error("Usuário não autenticado");
+                // Buscar membro
+                const { data: member } = await supabase
+                    .from("members")
+                    .select("id")
+                    .eq("user_id", user.id)
+                    .single();
 
-            // Buscar membro
-            const { data: member } = await supabase
-                .from("members")
-                .select("id")
-                .eq("user_id", user.id)
-                .single();
+                if (!member) throw new Error("Membro não encontrado");
 
-            if (!member) throw new Error("Membro não encontrado");
-
-            // Buscar matrículas
-            const { data, error } = await supabase
-                .from("enrollments")
-                .select(`
+                // Buscar matrículas
+                const { data, error } = await supabase
+                    .from("enrollments")
+                    .select(`
           *,
           class:classes (
             *,
             course:courses (*)
           )
         `)
-                .eq("student_id", member.id)
-                .order("enrolled_at", { ascending: false });
+                    .eq("student_id", member.id)
+                    .order("enrolled_at", { ascending: false });
 
-            if (error) throw error;
-            setEnrollments(data || []);
-        } catch (error: any) {
-            toast({
-                title: "Erro ao carregar cursos",
-                description: error.message,
-                variant: "destructive",
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
+                if (error) throw error;
+                // Cast data to unknown first if needed, but Supabase generic might handle it if set up.
+                // For now, we cast to any then to Enrollment[] to satisfy TS if types don't match perfectly.
+                setEnrollments((data as any) || []);
+            } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
+                toast({
+                    title: "Erro ao carregar cursos",
+                    description: errorMessage,
+                    variant: "destructive",
+                });
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadMyEnrollments();
+    }, [toast]);
 
     const getStatusBadge = (status: string) => {
         const badges: Record<string, { label: string; className: string }> = {

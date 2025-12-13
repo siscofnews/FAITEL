@@ -16,7 +16,7 @@ import Comunicacao from "./pages/Comunicacao";
 import Relatorios from "./pages/Relatorios";
 import Financeiro from "./pages/Financeiro";
 import Configuracoes from "./pages/Configuracoes";
-import Login from "./pages/Login";
+ 
 import Parceiros from "./pages/Parceiros";
 import ParceiroDetalhe from "./pages/ParceiroDetalhe";
 import RedesSociais from "./pages/RedesSociais";
@@ -71,6 +71,16 @@ import DashboardMelhorado from "./pages/DashboardMelhorado";
 import ConfiguracoesNotificacoes from "./pages/ConfiguracoesNotificacoes";
 import ConfiguracoesVisuais from "./pages/ConfiguracoesVisuais";
 
+// SISCOF 3.0 - Dual RBAC & EAD Module
+import GerenciarPerfisGlobais from "./pages/GerenciarPerfisGlobais";
+import GerenciarCursosEAD from "./pages/GerenciarCursosEAD";
+import GerenciarModulosAulasEAD from "./pages/GerenciarModulosAulasEAD";
+import AssistirCursoEAD from "./pages/AssistirCursoEAD";
+import VisualizarAulaEAD from "./pages/VisualizarAulaEAD";
+import MeusCursosEAD from "./pages/MeusCursosEAD";
+import AtribuirPermissoes from "./pages/AtribuirPermissoes";
+import RadioSISCOF from "./pages/RadioSISCOF";
+
 import SiscofAssistant from "./components/SiscofAssistant";
 import LandingEscalas from "./pages/public/LandingEscalas";
 import CadastroMembroPublico from "./pages/public/CadastroMembroPublico";
@@ -80,6 +90,84 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { VisitorBanner } from "@/components/layout/VisitorBanner";
 import PublicSchedulePage from "@/pages/public/PublicSchedulePage";
 import { RadioPlayer } from "@/components/layout/RadioPlayer";
+import AgendaPublica from "@/pages/public/AgendaPublica";
+import AgendaPublicaCemadeb from "@/pages/public/AgendaPublicaCemadeb";
+import GetAssistente from "@/pages/admin/GetAssistente";
+import ContatosManager from "@/pages/admin/ContatosManager";
+import LembretesAutomaticos from "@/pages/admin/LembretesAutomaticos";
+import AssinaturasAdmin from "@/pages/admin/AssinaturasAdmin";
+import PerfisLocais from "@/pages/PerfisLocais";
+import AssetsList from "@/pages/patrimonio/AssetsList";
+import PatrimonioDashboard from "@/pages/patrimonio/PatrimonioDashboard";
+import PrintAuthorization from "@/pages/patrimonio/PrintAuthorization";
+import AssetForm from "@/pages/patrimonio/AssetForm";
+import AssetDetail from "@/pages/patrimonio/AssetDetail";
+import MovementForm from "@/pages/patrimonio/MovementForm";
+import DefectsRepairs from "@/pages/patrimonio/DefectsRepairs";
+import PatrimonioReports from "@/pages/patrimonio/PatrimonioReports";
+// removed duplicate import to avoid identifier conflict
+import CadastroMinisterial from "@/pages/public/CadastroMinisterial";
+import MemberCredential from "@/pages/membros/MemberCredential";
+import ValidateCredential from "@/pages/membros/ValidateCredential";
+import ChurchesTree from "@/pages/admin/ChurchesTree";
+import ImportarMembros from "@/pages/admin/ImportarMembros";
+import CredentialTemplatesManager from "@/pages/admin/CredentialTemplatesManager";
+import CredentialBatchIssue from "@/pages/admin/CredentialBatchIssue";
+import ValidateSignature from "@/pages/membros/ValidateSignature";
+import CredentialGabaritoExport from "@/pages/membros/CredentialGabaritoExport";
+import TreasuryDashboard from "@/pages/tesouraria/TreasuryDashboard";
+import TreasuryClosure from "@/pages/tesouraria/TreasuryClosure";
+import MonthlyReports from "@/pages/tesouraria/MonthlyReports";
+import AccountingExport from "@/pages/tesouraria/AccountingExport";
+import AccountingSpedExport from "@/pages/tesouraria/AccountingSpedExport";
+import CostCenters from "@/pages/tesouraria/CostCenters";
+import ChartAccounts from "@/pages/tesouraria/ChartAccounts";
+ 
+import AccountingCustomExport from "@/pages/tesouraria/AccountingCustomExport";
+import TrendsReports from "@/pages/tesouraria/TrendsReports";
+import FinanceTypeMapping from "@/pages/tesouraria/FinanceTypeMapping";
+import AdvancedFiltersReports from "@/pages/tesouraria/AdvancedFiltersReports";
+import HeatmapTargets from "@/pages/tesouraria/HeatmapTargets";
+import TargetsCsv from "@/pages/tesouraria/TargetsCsv";
+import AccountingSpecManager from "@/pages/tesouraria/AccountingSpecManager";
+import Login from "@/pages/auth/Login";
+import GlobalAdmin from "@/pages/admin/GlobalAdmin";
+import ChurchAdminDashboard from "@/pages/admin/ChurchAdminDashboard";
+import ConventionAdminDashboard from "@/pages/admin/ConventionAdminDashboard";
+import CollegeAdminDashboard from "@/pages/admin/CollegeAdminDashboard";
+import MatrizManage from "@/pages/admin/churches/MatrizManage";
+import SedeManage from "@/pages/admin/churches/SedeManage";
+import SubsedeManage from "@/pages/admin/churches/SubsedeManage";
+import CongregationManage from "@/pages/admin/churches/CongregationManage";
+import NationalManage from "@/pages/admin/conventions/NationalManage";
+import StateManage from "@/pages/admin/conventions/StateManage";
+import CoordinationManage from "@/pages/admin/conventions/CoordinationManage";
+import CollegeMatrizManage from "@/pages/admin/college/MatrizManage";
+import PoloManage from "@/pages/admin/college/PoloManage";
+import NucleoManage from "@/pages/admin/college/NucleoManage";
+import MultiLevelReports from "@/pages/tesouraria/MultiLevelReports";
+import MultiEntityConsolidation from "@/pages/tesouraria/MultiEntityConsolidation";
+import ChartAccountsCsv from "@/pages/tesouraria/ChartAccountsCsv";
+import CoursesManage from "@/pages/ead/admin/CoursesManage";
+import ModulesManage from "@/pages/ead/admin/ModulesManage";
+import QuestionsBank from "@/pages/ead/admin/QuestionsBank";
+import ExamsManage from "@/pages/ead/admin/ExamsManage";
+import Enrollments from "@/pages/ead/polo/Enrollments";
+import ExamBuilder from "@/pages/ead/polo/ExamBuilder";
+import ContentManage from "@/pages/ead/professor/ContentManage";
+import StudentDashboard from "@/pages/ead/student/Dashboard";
+import StudentLogin from "@/pages/ead/StudentLogin";
+import WelcomeEmailEditor from "@/pages/ead/admin/WelcomeEmailEditor";
+import ContentOnboarding from "@/pages/ead/admin/ContentOnboarding";
+import SeedDemo from "@/pages/ead/admin/SeedDemo";
+import ModuleViewer from "@/pages/ead/student/ModuleViewer";
+import ExamRunner from "@/pages/ead/student/ExamRunner";
+import VideoPlayer from "@/pages/ead/student/VideoPlayer";
+import AcademicReports from "@/pages/ead/reports/AcademicReports";
+import FinancePanel from "@/pages/ead/admin/FinancePanel";
+import Licensing from "@/pages/ead/admin/Licensing";
+import SettingsManage from "@/pages/ead/admin/SettingsManage";
+import { HomeFloating } from "@/components/layout/HomeFloating";
 
 const queryClient = new QueryClient();
 
@@ -97,15 +185,18 @@ const App = () => (
               <div className="fixed top-16 left-0 right-0 z-30">
                 <VisitorBanner />
               </div>
+              <HomeFloating />
 
               <div className="pt-32 min-h-screen flex flex-col">
                 <Routes>
                   {/* Public routes */}
                   <Route path="/" element={<Portal />} />
                   <Route path="/escalas-publicas" element={<PublicSchedulePage />} />
+                  <Route path="/agenda-publica" element={<AgendaPublica />} />
+                  <Route path="/agenda-publica-cemadeb" element={<AgendaPublicaCemadeb />} />
                   <Route path="/sistema-escalas" element={<LandingEscalas />} />
                   <Route path="/cadastro-membro/:matrizId" element={<CadastroMembroPublico />} />
-                  <Route path="/login" element={<Login />} />
+                  
                   <Route path="/recuperar-senha" element={<RecuperarSenha />} />
                   <Route path="/convite/:token" element={<AceitarConvite />} />
                   <Route path="/parceiros" element={<Parceiros />} />
@@ -182,6 +273,93 @@ const App = () => (
                   <Route path="/configuracoes-notificacoes" element={<ProtectedRoute><ConfiguracoesNotificacoes /></ProtectedRoute>} />
                   <Route path="/configuracoes-visuais" element={<ProtectedRoute><ConfiguracoesVisuais /></ProtectedRoute>} />
 
+                  {/* SISCOF - Assistente e Lembretes */}
+                  <Route path="/assistente-lembretes" element={<ProtectedRoute><GetAssistente /></ProtectedRoute>} />
+                  <Route path="/contatos-lembretes" element={<ProtectedRoute><ContatosManager /></ProtectedRoute>} />
+                  <Route path="/lembretes-automaticos" element={<ProtectedRoute><LembretesAutomaticos /></ProtectedRoute>} />
+                  <Route path="/assinaturas" element={<ProtectedRoute><AssinaturasAdmin /></ProtectedRoute>} />
+                  <Route path="/perfis-locais/:churchId" element={<ProtectedRoute><PerfisLocais /></ProtectedRoute>} />
+                  <Route path="/patrimonio" element={<ProtectedRoute><PatrimonioDashboard /></ProtectedRoute>} />
+                  <Route path="/patrimonio/itens" element={<ProtectedRoute><AssetsList /></ProtectedRoute>} />
+                  <Route path="/patrimonio/novo" element={<ProtectedRoute><AssetForm /></ProtectedRoute>} />
+                  <Route path="/patrimonio/item/:assetId" element={<ProtectedRoute><AssetDetail /></ProtectedRoute>} />
+                  <Route path="/patrimonio/movimentar/:assetId" element={<ProtectedRoute><MovementForm /></ProtectedRoute>} />
+                  <Route path="/patrimonio/defeitos/:assetId" element={<ProtectedRoute><DefectsRepairs /></ProtectedRoute>} />
+                  <Route path="/patrimonio/relatorios" element={<ProtectedRoute><PatrimonioReports /></ProtectedRoute>} />
+                  <Route path="/cadastro-membro" element={<CadastroMembro />} />
+                  <Route path="/cadastro-ministerial" element={<CadastroMinisterial />} />
+                  <Route path="/credencial/:id" element={<ProtectedRoute><MemberCredential /></ProtectedRoute>} />
+                  <Route path="/validar-credencial" element={<ValidateCredential />} />
+                  <Route path="/validar-assinatura" element={<ValidateSignature />} />
+                  <Route path="/export-credencial/:id" element={<ProtectedRoute><CredentialGabaritoExport /></ProtectedRoute>} />
+                  <Route path="/arvore-unidades" element={<ProtectedRoute><ChurchesTree /></ProtectedRoute>} />
+                  <Route path="/importar-membros" element={<ProtectedRoute><ImportarMembros /></ProtectedRoute>} />
+                  <Route path="/modelos-credencial" element={<ProtectedRoute><CredentialTemplatesManager /></ProtectedRoute>} />
+                  <Route path="/emissao-credenciais" element={<ProtectedRoute><CredentialBatchIssue /></ProtectedRoute>} />
+                  <Route path="/tesouraria" element={<ProtectedRoute><TreasuryDashboard /></ProtectedRoute>} />
+                  <Route path="/tesouraria/fechamento" element={<ProtectedRoute><TreasuryClosure /></ProtectedRoute>} />
+                  <Route path="/tesouraria/relatorios" element={<ProtectedRoute><MonthlyReports /></ProtectedRoute>} />
+                  <Route path="/tesouraria/export-contabil" element={<ProtectedRoute><AccountingExport /></ProtectedRoute>} />
+                  <Route path="/tesouraria/export-txt" element={<ProtectedRoute><AccountingSpedExport /></ProtectedRoute>} />
+                  <Route path="/tesouraria/centros-custo" element={<ProtectedRoute><CostCenters /></ProtectedRoute>} />
+                  <Route path="/tesouraria/plano-contas" element={<ProtectedRoute><ChartAccounts /></ProtectedRoute>} />
+                  <Route path="/tesouraria/consolidacao" element={<ProtectedRoute><MultiEntityConsolidation /></ProtectedRoute>} />
+                  <Route path="/tesouraria/export-contador" element={<ProtectedRoute><AccountingCustomExport /></ProtectedRoute>} />
+                  <Route path="/tesouraria/tendencias" element={<ProtectedRoute><TrendsReports /></ProtectedRoute>} />
+                  <Route path="/tesouraria/mapeamento-tipo-conta" element={<ProtectedRoute><FinanceTypeMapping /></ProtectedRoute>} />
+                  <Route path="/tesouraria/filtros-avancados" element={<ProtectedRoute><AdvancedFiltersReports /></ProtectedRoute>} />
+                  <Route path="/tesouraria/plano-contas-csv" element={<ProtectedRoute><ChartAccountsCsv /></ProtectedRoute>} />
+                  <Route path="/tesouraria/heatmap-metas" element={<ProtectedRoute><HeatmapTargets /></ProtectedRoute>} />
+                  <Route path="/tesouraria/metas-csv" element={<ProtectedRoute><TargetsCsv /></ProtectedRoute>} />
+                  <Route path="/tesouraria/especificacao" element={<ProtectedRoute><AccountingSpecManager /></ProtectedRoute>} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/ead/aluno/login" element={<StudentLogin />} />
+                  <Route path="/admin/global" element={<ProtectedRoute><GlobalAdmin /></ProtectedRoute>} />
+                  <Route path="/admin/igreja/:id" element={<ProtectedRoute><ChurchAdminDashboard /></ProtectedRoute>} />
+                  <Route path="/admin/convencao/:id" element={<ProtectedRoute><ConventionAdminDashboard /></ProtectedRoute>} />
+                  <Route path="/admin/faculdade/:id" element={<ProtectedRoute><CollegeAdminDashboard /></ProtectedRoute>} />
+                  <Route path="/admin/igrejas/matriz" element={<ProtectedRoute><MatrizManage /></ProtectedRoute>} />
+                  <Route path="/admin/igrejas/sedes" element={<ProtectedRoute><SedeManage /></ProtectedRoute>} />
+                  <Route path="/admin/igrejas/subsedes" element={<ProtectedRoute><SubsedeManage /></ProtectedRoute>} />
+                  <Route path="/admin/igrejas/congregacoes" element={<ProtectedRoute><CongregationManage /></ProtectedRoute>} />
+                  <Route path="/admin/convencoes/nacionais" element={<ProtectedRoute><NationalManage /></ProtectedRoute>} />
+                  <Route path="/admin/convencoes/estaduais" element={<ProtectedRoute><StateManage /></ProtectedRoute>} />
+                  <Route path="/admin/convencoes/coordenadorias" element={<ProtectedRoute><CoordinationManage /></ProtectedRoute>} />
+                  <Route path="/admin/faculdades/matriz" element={<ProtectedRoute><CollegeMatrizManage /></ProtectedRoute>} />
+                  <Route path="/admin/faculdades/polos" element={<ProtectedRoute><PoloManage /></ProtectedRoute>} />
+                  <Route path="/admin/faculdades/nucleos" element={<ProtectedRoute><NucleoManage /></ProtectedRoute>} />
+                  <Route path="/tesouraria/relatorio-multinivel" element={<ProtectedRoute><MultiLevelReports /></ProtectedRoute>} />
+
+                  {/* EAD SISCOF */}
+                  <Route path="/ead/admin/cursos" element={<ProtectedRoute><CoursesManage /></ProtectedRoute>} />
+                  <Route path="/ead/admin/modulos" element={<ProtectedRoute><ModulesManage /></ProtectedRoute>} />
+                  <Route path="/ead/admin/banco-questoes" element={<ProtectedRoute><QuestionsBank /></ProtectedRoute>} />
+                  <Route path="/ead/admin/provas" element={<ProtectedRoute><ExamsManage /></ProtectedRoute>} />
+                  <Route path="/ead/polo/matriculas" element={<ProtectedRoute><Enrollments /></ProtectedRoute>} />
+                  <Route path="/ead/polo/montar-prova" element={<ProtectedRoute><ExamBuilder /></ProtectedRoute>} />
+                  <Route path="/ead/professor/conteudos" element={<ProtectedRoute><ContentManage /></ProtectedRoute>} />
+                  <Route path="/ead/aluno" element={<ProtectedRoute><StudentDashboard /></ProtectedRoute>} />
+                  <Route path="/ead/aluno/curso/:courseId" element={<ProtectedRoute><ModuleViewer /></ProtectedRoute>} />
+                  <Route path="/ead/aluno/exam/:moduleId" element={<ProtectedRoute><ExamRunner /></ProtectedRoute>} />
+                  <Route path="/ead/aluno/player/:moduleId" element={<ProtectedRoute><VideoPlayer /></ProtectedRoute>} />
+                  <Route path="/ead/relatorios/academicos" element={<ProtectedRoute><AcademicReports /></ProtectedRoute>} />
+                  <Route path="/ead/admin/financeiro" element={<ProtectedRoute><FinancePanel /></ProtectedRoute>} />
+                  <Route path="/ead/admin/licencas" element={<ProtectedRoute><Licensing /></ProtectedRoute>} />
+                  <Route path="/ead/admin/configuracoes" element={<ProtectedRoute><SettingsManage /></ProtectedRoute>} />
+                  <Route path="/ead/admin/mensagem-boas-vindas" element={<ProtectedRoute><WelcomeEmailEditor /></ProtectedRoute>} />
+                  <Route path="/ead/admin/onboarding-conteudo" element={<ProtectedRoute><ContentOnboarding /></ProtectedRoute>} />
+                  <Route path="/ead/admin/seed-demo" element={<ProtectedRoute><SeedDemo /></ProtectedRoute>} />
+
+                  {/* SISCOF 3.0 - Dual RBAC & EAD Module */}
+                  <Route path="/gerenciar-perfis-globais" element={<ProtectedRoute><GerenciarPerfisGlobais /></ProtectedRoute>} />
+                  <Route path="/atribuir-permissoes" element={<ProtectedRoute><AtribuirPermissoes /></ProtectedRoute>} />
+                  <Route path="/gerenciar-cursos-ead" element={<ProtectedRoute><GerenciarCursosEAD /></ProtectedRoute>} />
+                  <Route path="/ead/curso/:courseId/gerenciar" element={<ProtectedRoute><GerenciarModulosAulasEAD /></ProtectedRoute>} />
+                  <Route path="/meus-cursos-ead" element={<ProtectedRoute><MeusCursosEAD /></ProtectedRoute>} />
+                  <Route path="/ead/curso/:courseId" element={<ProtectedRoute><AssistirCursoEAD /></ProtectedRoute>} />
+                  <Route path="/ead/aula/:lessonId" element={<ProtectedRoute><VisualizarAulaEAD /></ProtectedRoute>} />
+                  <Route path="/radio" element={<ProtectedRoute><RadioSISCOF /></ProtectedRoute>} />
+
 
                   <Route path="*" element={<NotFound />} />
                 </Routes>
@@ -198,3 +376,4 @@ const App = () => (
 );
 
 export default App;
+ 

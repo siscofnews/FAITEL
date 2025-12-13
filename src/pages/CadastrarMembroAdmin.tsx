@@ -80,7 +80,7 @@ export default function CadastrarMembroAdmin() {
             .eq('parent_church_id', churchId)
             .eq('is_active', true);
 
-        let allChurches = [current];
+        const allChurches = [current];
 
         if (children && children.length > 0) {
             for (const child of children) {

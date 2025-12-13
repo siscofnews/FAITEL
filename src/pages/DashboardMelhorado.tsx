@@ -16,7 +16,6 @@ import {
     BarChart3
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
 
 interface DashboardStats {
     totalCursos: number;
@@ -135,7 +134,7 @@ export default function ImprovedDashboard() {
                         </p>
                     </div>
                     <div className="flex gap-3">
-                        <Link to={createPageUrl("GerenciarCursos")}>
+                        <Link to="/gerenciar-cursos">
                             <Button
                                 size="lg"
                                 className="px-6 py-3 md:px-8 md:py-4 text-base md:text-lg font-bold bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:transform hover:scale-[1.05]"
@@ -276,7 +275,7 @@ export default function ImprovedDashboard() {
 
                 {/* Quick Actions */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <Link to={createPageUrl("GerenciarCursos")}>
+                    <Link to="/gerenciar-cursos">
                         <Card className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:transform hover:scale-[1.02] bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
                             <CardContent className="p-8 text-center">
                                 <BookOpen className="w-12 h-12 mx-auto mb-4" />
@@ -286,7 +285,7 @@ export default function ImprovedDashboard() {
                         </Card>
                     </Link>
 
-                    <Link to={createPageUrl("GerenciarTurmas")}>
+                    <Link to="/gerenciar-turmas">
                         <Card className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:transform hover:scale-[1.02] bg-gradient-to-br from-emerald-500 to-teal-600 text-white">
                             <CardContent className="p-8 text-center">
                                 <Users className="w-12 h-12 mx-auto mb-4" />
@@ -296,7 +295,7 @@ export default function ImprovedDashboard() {
                         </Card>
                     </Link>
 
-                    <Link to={createPageUrl("MinhasTurmas")}>
+                    <Link to="/minhas-turmas">
                         <Card className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:transform hover:scale-[1.02] bg-gradient-to-br from-purple-500 to-violet-600 text-white">
                             <CardContent className="p-8 text-center">
                                 <Award className="w-12 h-12 mx-auto mb-4" />

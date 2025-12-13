@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { getUserScopeStates } from "@/wiring/accessScope";
 import { 
   Church, 
   CheckCircle, 
@@ -45,15 +46,33 @@ const nivelLabels: Record<string, string> = {
 export default function IgrejasAprovacao() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { isSuperAdmin } = useAuth();
+  const { isSuperAdmin, user } = useAuth();
+  const [scopeStates, setScopeStates] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      if (user?.id) {
+        try { setScopeStates(await getUserScopeStates(user.id)); } catch {}
+      }
+    })();
+  }, [user?.id]);
 
   const { data: pendingChurches, isLoading } = useQuery({
-    queryKey: ["pending_churches"],
+    queryKey: ["pending_churches", scopeStates.join(";")],
     queryFn: async () => {
+      let accessibleIds: string[] = [];
+      if (user?.id) {
+        try {
+          const { data: ids } = await supabase.rpc('get_accessible_church_ids', { _user_id: user.id });
+          accessibleIds = (ids || []) as any;
+        } catch {}
+      }
       const { data, error } = await supabase
         .from("churches")
         .select("*")
         .eq("is_approved", false)
+        .in(scopeStates.length ? 'estado' : 'id', scopeStates.length ? scopeStates : undefined as any)
+        .in(accessibleIds.length ? 'parent_church_id' : 'id', accessibleIds.length ? accessibleIds : undefined as any)
         .order("created_at", { ascending: false });
       
       if (error) throw error;
