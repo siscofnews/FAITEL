@@ -44,6 +44,7 @@ import { CEMADEBFeaturedArticle } from "@/components/portal/CEMADEBFeaturedArtic
 import { RadioBanner } from "@/components/portal/RadioBanner";
 import { FutureTempleBanner } from "@/components/portal/FutureTempleBanner";
 import { BooksSection } from "@/components/portal/BooksSection";
+import { CourseBooksSection } from "@/components/ead/CourseBooksSection";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useEvangelicalNews } from "@/hooks/useEvangelicalNews";
@@ -1080,6 +1081,9 @@ export default function Portal() {
 
       {/* Books Section */}
       <BooksSection />
+
+      {/* Course Theology Books */}
+      <CourseBooksSection />
 
       {/* Partners Section */}
       <PartnersSection />

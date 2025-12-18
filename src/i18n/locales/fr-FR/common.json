@@ -1,0 +1,55 @@
+{
+    "app": {
+        "name": "SISCOF",
+        "tagline": "Système de Gestion Ecclésiastique"
+    },
+    "nav": {
+        "home": "Accueil",
+        "dashboard": "Tableau de bord",
+        "churches": "Églises",
+        "members": "Membres",
+        "treasury": "Trésorerie",
+        "ead": "EAD",
+        "reports": "Rapports",
+        "settings": "Paramètres",
+        "logout": "Déconnexion"
+    },
+    "buttons": {
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "delete": "Supprimer",
+        "edit": "Modifier",
+        "add": "Ajouter",
+        "back": "Retour",
+        "next": "Suivant",
+        "submit": "Soumettre",
+        "search": "Rechercher",
+        "filter": "Filtrer",
+        "export": "Exporter",
+        "import": "Importer",
+        "close": "Fermer",
+        "confirm": "Confirmer"
+    },
+    "messages": {
+        "success": "Opération réussie!",
+        "error": "Une erreur s'est produite. Veuillez réessayer.",
+        "loading": "Chargement...",
+        "noData": "Aucune donnée trouvée",
+        "confirmDelete": "Êtes-vous sûr de vouloir supprimer?",
+        "saved": "Enregistré avec succès",
+        "deleted": "Supprimé avec succès",
+        "updated": "Mis à jour avec succès"
+    },
+    "forms": {
+        "name": "Nom",
+        "email": "E-mail",
+        "phone": "Téléphone",
+        "address": "Adresse",
+        "city": "Ville",
+        "state": "État",
+        "zipCode": "Code postal",
+        "required": "Champ requis",
+        "invalidEmail": "E-mail invalide",
+        "invalidPhone": "Téléphone invalide"
+    }
+}

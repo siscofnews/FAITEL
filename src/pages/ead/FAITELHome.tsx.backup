@@ -1,0 +1,953 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+    GraduationCap,
+    BookOpen,
+    Users,
+    Globe,
+    Award,
+    Target,
+    TrendingUp,
+    Heart,
+    Phone,
+    Mail,
+    MapPin,
+    ChevronRight,
+    Check,
+    Play,
+    Home,
+    Library,
+    HelpCircle
+} from "lucide-react";
+
+export default function FAITELHome() {
+    const [showVideo, setShowVideo] = useState(false);
+    const [showInstitucionalMenu, setShowInstitucionalMenu] = useState(false);
+    const [showEnsinoMenu, setShowEnsinoMenu] = useState(false);
+    const [showVestibularMenu, setShowVestibularMenu] = useState(false);
+    const [showEadMenu, setShowEadMenu] = useState(false);
+    const [showBibliotecaMenu, setShowBibliotecaMenu] = useState(false);
+    const [showGraduacaoMenu, setShowGraduacaoMenu] = useState(false);
+    const [showPosMenu, setShowPosMenu] = useState(false);
+    const [showLivresMenu, setShowLivresMenu] = useState(false);
+    const [showEstudeMenu, setShowEstudeMenu] = useState(false);
+    const logoFaitel = "C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_1765642718680.jpg";
+
+    const diferenciais = [
+        {
+            icon: Award,
+            titulo: "Excelência Acadêmica",
+            descricao: "23 anos formando líderes com qualidade reconhecida internacionalmente"
+        },
+        {
+            icon: Globe,
+            titulo: "Alcance Internacional",
+            descricao: "Presença em 7 países com ensino multicultural"
+        },
+        {
+            icon: Users,
+            titulo: "Corpo Docente Qualificado",
+            descricao: "Mestres e doutores com experiência ministerial"
+        },
+        {
+            icon: BookOpen,
+            titulo: "Material Didático Exclusivo",
+            descricao: "Manuais autodidáticos desenvolvidos pela FAITEL"
+        }
+    ];
+
+    const cursos = [
+        {
+            titulo: "Bacharelado em Teologia",
+            duracao: "4 anos",
+            modalidade: "100% EAD",
+            descricao: "Formação completa em teologia bíblica interconfessional",
+            cor: "from-blue-600 to-blue-800"
+        },
+        {
+            titulo: "Pós-Graduação",
+            duracao: "12-18 meses",
+            modalidade: "100% EAD",
+            descricao: "Especializações em Capelania, Missiologia, Docência e mais",
+            cor: "from-purple-600 to-purple-800"
+        },
+        {
+            titulo: "Cursos Livres",
+            duracao: "Flexível",
+            modalidade: "100% EAD",
+            descricao: "Formação complementar em áreas específicas",
+            cor: "from-amber-600 to-amber-800"
+        }
+    ];
+
+    return (
+        <div className="min-h-screen bg-white">
+            {/* Banner Rotativo no Topo */}
+            <div className="w-full bg-gradient-to-r from-purple-100 via-pink-50 to-purple-100 overflow-hidden">
+                <div className="animate-marquee whitespace-nowrap py-2">
+                    <img
+                        src="C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_1765646846908.png"
+                        alt="FACULDADE FAITEL - Excelência em Educação - INSCRIÇÕES ABERTAS"
+                        className="inline-block h-20 w-auto"
+                    />
+                </div>
+            </div>
+
+            {/* Top Navigation Bar */}
+            <nav className="bg-blue-900 text-white py-3 sticky top-0 z-50 shadow-lg">
+                <div className="container mx-auto px-4">
+                    <div className="flex items-center justify-between">
+                        {/* Logo */}
+                        <div className="flex items-center gap-3">
+                            <img src={logoFaitel} alt="FAITEL" className="h-10 w-10" />
+                            <span className="text-2xl font-bold">FAITEL</span>
+                        </div>
+
+                        {/* Menu Items */}
+                        <div className="hidden lg:flex items-center gap-4 text-xs font-semibold">
+                            {/* HOME */}
+                            <a href="/" className="hover:text-yellow-400 transition-colors flex items-center gap-1 px-2">
+                                <Home className="h-3 w-3" />
+                                HOME
+                            </a>
+
+                            {/* VESTIBULAR */}
+                            <div
+                                className="relative"
+                                onMouseEnter={() => setShowVestibularMenu(true)}
+                                onMouseLeave={() => setShowVestibularMenu(false)}
+                            >
+                                <button className="flex items-center gap-1 hover:text-yellow-400 transition-colors px-2">
+                                    VESTIBULAR
+                                    <ChevronRight className={`h-3 w-3 transition-transform ${showVestibularMenu ? 'rotate-90' : ''}`} />
+                                </button>
+
+                                {showVestibularMenu && (
+                                    <div className="absolute top-full left-0 mt-2 bg-white text-gray-900 rounded-lg shadow-xl py-3 min-w-[240px] px-4">
+                                        <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">VESTIBULAR ONLINE 2025</a>
+                                        <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">VESTIBULAR AGENDADO 2025</a>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* EAD - Dropdown */}
+                            <div
+                                className="relative"
+                                onMouseEnter={() => setShowEadMenu(true)}
+                                onMouseLeave={() => setShowEadMenu(false)}
+                            >
+                                <button className="flex items-center gap-1 hover:text-yellow-400 transition-colors px-2">
+                                    EAD
+                                    <ChevronRight className={`h-3 w-3 transition-transform ${showEadMenu ? 'rotate-90' : ''}`} />
+                                </button>
+
+                                {showEadMenu && (
+                                    <div className="absolute top-full left-0 mt-2 bg-white text-gray-900 rounded-lg shadow-xl py-3 min-w-[220px] px-4">
+                                        <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">ACESSE SUA SALA</a>
+                                        <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">FAQ DE ATENDIMENTO</a>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* BIBLIOTECA */}
+                            <div
+                                className="relative"
+                                onMouseEnter={() => setShowBibliotecaMenu(true)}
+                                onMouseLeave={() => setShowBibliotecaMenu(false)}
+                            >
+                                <button className="flex items-center gap-1 hover:text-yellow-400 transition-colors px-2">
+                                    <Library className="h-3 w-3" />
+                                    BIBLIOTECA
+                                    <ChevronRight className={`h-3 w-3 transition-transform ${showBibliotecaMenu ? 'rotate-90' : ''}`} />
+                                </button>
+
+                                {showBibliotecaMenu && (
+                                    <div className="absolute top-full left-0 mt-2 bg-white text-gray-900 rounded-lg shadow-xl py-3 min-w-[220px] px-4">
+                                        <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">ACESSE SUA SALA</a>
+                                        <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">GUIA E LINK</a>
+                                        <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">ABNT COLEÇÃO</a>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* FAQ DE ATENDIMENTO */}
+                            <a href="#" className="hover:text-yellow-400 transition-colors flex items-center gap-1 px-2">
+                                <HelpCircle className="h-3 w-3" />
+                                FAQ DE ATENDIMENTO
+                            </a>
+
+                            {/* INSTITUCIONAL */}
+                            <div
+                                className="relative"
+                                onMouseEnter={() => setShowInstitucionalMenu(true)}
+                                onMouseLeave={() => setShowInstitucionalMenu(false)}
+                            >
+                                <button className="flex items-center gap-1 hover:text-yellow-400 transition-colors px-2">
+                                    INSTITUCIONAL
+                                    <ChevronRight className={`h-3 w-3 transition-transform ${showInstitucionalMenu ? 'rotate-90' : ''}`} />
+                                </button>
+
+                                {showInstitucionalMenu && (
+                                    <div className="absolute top-full left-0 mt-2 bg-white text-gray-900 rounded-lg shadow-xl py-3 min-w-[250px] px-4">
+                                        <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">Missão, Visão e Valores</a>
+                                        <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">Regimento</a>
+                                        <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">Ouvidoria</a>
+                                        <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">Administração Acadêmica</a>
+                                        <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">CPA</a>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* ENSINO */}
+                            <div
+                                className="relative"
+                                onMouseEnter={() => setShowEnsinoMenu(true)}
+                                onMouseLeave={() => setShowEnsinoMenu(false)}
+                            >
+                                <button className="flex items-center gap-1 hover:text-yellow-400 transition-colors px-2">
+                                    ENSINO
+                                    <ChevronRight className={`h-3 w-3 transition-transform ${showEnsinoMenu ? 'rotate-90' : ''}`} />
+                                </button>
+
+                                {showEnsinoMenu && (
+                                    <div className="absolute top-full left-0 mt-2 bg-white text-gray-900 rounded-lg shadow-xl py-4 min-w-[800px] grid grid-cols-3 gap-6 px-6 max-h-[600px] overflow-y-auto">
+                                        <div>
+                                            <h4 className="font-bold text-xs text-blue-600 mb-3 uppercase border-b pb-2">Formação Básica</h4>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📘 Teologia Básica</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📗 Teologia Média</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📙 Bacharel</a>
+                                            <h4 className="font-bold text-xs text-green-600 mb-3 mt-4 uppercase border-b pb-2">EJA - Conclua</h4>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">🎓 Ensino Fundamental</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">🎓 Ensino Médio</a>
+                                            <h4 className="font-bold text-xs text-blue-600 mb-3 mt-4 uppercase border-b pb-2">Graduação</h4>
+                                            <a href="/ead/bacharelado-teologia" className="block py-2 hover:text-blue-600 transition-colors text-sm font-semibold">🎓 Bacharelado</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">🎓 Licenciatura</a>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-xs text-purple-600 mb-3 uppercase border-b pb-2">Pós-Graduação</h4>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📚 Capelania Hospitalar</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📚 Capelania Militar</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📚 Ciências da Religião</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📚 Docência em Teologia</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📚 Psicanálise Clínica</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📚 Direito Canônico</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📚 Teologia Sistemática</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📚 Aconselhamento</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📚 Missiologia</a>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-xs text-orange-600 mb-3 uppercase border-b pb-2">Alta Especialização</h4>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">🎯 Gestão de Igrejas</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">🎯 Liderança Avançada</a>
+                                            <h4 className="font-bold text-xs text-red-600 mb-3 mt-4 uppercase border-b pb-2">Stricto Sensu</h4>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm font-semibold">👨‍🎓 Mestrado</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm font-semibold">👨‍🎓 Doutorado</a>
+                                            <h4 className="font-bold text-xs text-amber-600 mb-3 mt-4 uppercase border-b pb-2">Cursos Livres</h4>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📖 Líderes de Células</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📖 Evangelismo</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📖 Música Sacra</a>
+                                            <a href="#" className="block py-2 hover:text-blue-600 transition-colors text-sm">📖 Juiz de Paz</a>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Estude na FAITEL */}
+                            <div
+                                className="relative"
+                                onMouseEnter={() => setShowEstudeMenu(true)}
+                                onMouseLeave={() => setShowEstudeMenu(false)}
+                            >
+                                <button className="flex items-center gap-1 hover:text-yellow-400 transition-colors px-2">
+                                    ACESSO
+                                    <ChevronRight className={`h-3 w-3 transition-transform ${showEstudeMenu ? 'rotate-90' : ''}`} />
+                                </button>
+
+                                {showEstudeMenu && (
+                                    <div className="absolute top-full left-0 mt-2 bg-white text-gray-900 rounded-lg shadow-xl py-3 min-w-[200px] px-4">
+                                        <a href="/admin/super" className="block py-2 hover:text-blue-600 transition-colors text-sm">Portal Super Admin</a>
+                                        <a href="/admin/diretor" className="block py-2 hover:text-blue-600 transition-colors text-sm">Portal Diretor</a>
+                                        <a href="/professor" className="block py-2 hover:text-blue-600 transition-colors text-sm">Portal Professor</a>
+                                        <a href="/aluno" className="block py-2 hover:text-blue-600 transition-colors text-sm">Portal Aluno</a>
+                                    </div>
+                                )}
+                            </div>
+
+                            <a href="#contato" className="hover:text-yellow-400 transition-colors px-2">
+                                CONTATO
+                            </a>
+                        </div>
+
+                        {/* CTA Button */}
+                        <Button className="bg-yellow-400 text-blue-900 hover:bg-yellow-500 font-bold text-sm px-4 py-2">
+                            INSCREVA-SE
+                        </Button>
+                    </div>
+                </div>
+            </nav>
+
+            {/* Hero Section */}
+            <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white overflow-hidden">
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-10">
+                    <div className="absolute top-0 left-0 w-96 h-96 bg-yellow-400 rounded-full filter blur-3xl"></div>
+                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500 rounded-full filter blur-3xl"></div>
+                </div>
+
+                <div className="container mx-auto px-4 py-20 relative z-10">
+                    <div className="grid md:grid-cols-2 gap-12 items-center">
+                        {/* Texto */}
+                        <div className="space-y-6">
+                            <div className="flex items-center gap-4 mb-6">
+                                <img
+                                    src={logoFaitel}
+                                    alt="FAITEL Logo"
+                                    className="h-20 w-20 object-contain"
+                                />
+                                <div>
+                                    <h1 className="text-5xl md:text-6xl font-black">FAITEL</h1>
+                                    <p className="text-blue-200 text-lg">Faculdade Internacional Teológica de Líderes</p>
+                                </div>
+                            </div>
+
+                            <h2 className="text-3xl md:text-4xl font-bold leading-tight">
+                                Transforme Vidas e Aprofunde Seus Conhecimentos com o Bacharelado em Teologia
+                            </h2>
+
+                            <p className="text-xl text-blue-100">
+                                Descubra como a FAITEL pode transformar sua trajetória. Com sólida formação teológica, você será preparado para atuar em diversas atividades religiosas com flexibilidade e qualidade.
+                            </p>
+
+                            <div className="flex flex-wrap gap-4">
+                                <Button
+                                    size="lg"
+                                    className="bg-yellow-400 text-blue-900 hover:bg-yellow-500 font-bold text-lg px-8 py-6"
+                                >
+                                    INSCREVA-SE AGORA
+                                    <ChevronRight className="ml-2" />
+                                </Button>
+                                <Button
+                                    size="lg"
+                                    variant="outline"
+                                    className="border-2 border-white text-white hover:bg-white/10 font-bold text-lg px-8 py-6"
+                                    onClick={() => setShowVideo(true)}
+                                >
+                                    <Play className="mr-2" />
+                                    CONHEÇA O CURSO
+                                </Button>
+                            </div>
+
+                            {/* Stats */}
+                            <div className="grid grid-cols-3 gap-4 pt-8">
+                                <div className="text-center">
+                                    <div className="text-4xl font-black text-yellow-400">23</div>
+                                    <div className="text-sm text-blue-200">Anos de Excelência</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-4xl font-black text-yellow-400">1000+</div>
+                                    <div className="text-sm text-blue-200">Alunos Formados</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-4xl font-black text-yellow-400">7</div>
+                                    <div className="text-sm text-blue-200">Países Atendidos</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Imagem/Vídeo */}
+                        <div className="relative">
+                            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border-2 border-white/20">
+                                <img
+                                    src={logoFaitel}
+                                    alt="FAITEL"
+                                    className="w-full h-auto"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Seção de Boas-Vindas e Experiência Premium */}
+            <section className="py-20 bg-gradient-to-br from-slate-700 via-blue-800 to-blue-900">
+                <div className="container mx-auto px-4">
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        {/* Lado Esquerdo - Texto */}
+                        <div className="text-white space-y-6">
+                            <div className="flex items-center gap-4 mb-6">
+                                <img src={logoFaitel} alt="FAITEL Logo" className="h-16 w-16 rounded-full border-2 border-yellow-400" />
+                                <span className="bg-yellow-400 text-blue-900 px-4 py-1 rounded-full font-bold text-sm">FAITEL</span>
+                            </div>
+
+                            <h2 className="text-4xl md:text-5xl font-black text-yellow-400 leading-tight">
+                                Estude com desempenho e uma experiência premium
+                            </h2>
+
+                            <p className="text-xl text-blue-100 leading-relaxed">
+                                Vídeos, certificados, comunidade e avaliações em uma plataforma rápida, segura e com a sua cara
+                            </p>
+
+                            {/* Card de Boas-Vindas do Diretor */}
+                            <Card className="bg-white/10 backdrop-blur-md border-2 border-white/20">
+                                <CardContent className="p-6">
+                                    <div className="flex items-start gap-4">
+                                        <div className="relative">
+                                            <img
+                                                src="C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_1765654697818.jpg"
+                                                alt="Chanceler Valdinei da Conceição Santos"
+                                                className="w-16 h-16 rounded-full object-cover border-4 border-yellow-400"
+                                            />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <h3 className="font-bold text-white text-lg">VALDINEI DA CONCEIÇÃO SANTOS</h3>
+                                            </div>
+                                            <p className="text-blue-100 text-sm mb-3">Chanceler da FAITEL | Mensagem de boas-vindas</p>
+                                            <div className="flex gap-2">
+                                                <Button variant="outline" size="sm" className="border-white/30 text-white hover:bg-white/10">
+                                                    <Play className="h-4 w-4 mr-1" />
+                                                    Pausar
+                                                </Button>
+                                                <Button variant="outline" size="sm" className="border-white/30 text-white hover:bg-white/10">
+                                                    Reproduzir
+                                                </Button>
+                                            </div>
+                                        </div>
+                                        {/* Sobre o Curso */}
+                                        <section className="py-20 bg-gray-50">
+                                            <div className="container mx-auto px-4">
+                                                <div className="max-w-4xl mx-auto text-center mb-12">
+                                                    <h2 className="text-4xl font-bold text-gray-900 mb-6">SOBRE O BACHARELADO EM TEOLOGIA</h2>
+                                                    <p className="text-xl text-gray-600 leading-relaxed">
+                                                        O curso de Teologia estuda o campo teórico investigativo da teologia, do ensino e do trabalho comunitário, capacitando você a exercer funções de liderança, mobilizar pessoas em projetos humanitários e exercer atividades pastorais, evangelísticas e missionárias.
+                                                    </p>
+                                                </div>
+
+                                                {/* Diferenciais */}
+                                                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                                    {diferenciais.map((item, idx) => (
+                                                        <Card key={idx} className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                                                            <CardContent className="p-6 text-center">
+                                                                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                                    <item.icon className="h-8 w-8 text-blue-600" />
+                                                                </div>
+                                                                <h3 className="font-bold text-lg mb-2">{item.titulo}</h3>
+                                                                <p className="text-sm text-gray-600">{item.descricao}</p>
+                                                            </CardContent>
+                                                        </Card>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </section>
+
+                                        {/* Cursos Disponíveis */}
+                                        <section className="py-20">
+                                            <div className="container mx-auto px-4">
+                                                <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">NOSSOS CURSOS</h2>
+
+                                                <div className="grid md:grid-cols-3 gap-8">
+                                                    {cursos.map((curso, idx) => (
+                                                        <Card key={idx} className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                                            <div className={`h-2 bg-gradient-to-r ${curso.cor}`}></div>
+                                                            <CardContent className="p-8">
+                                                                <h3 className="text-2xl font-bold mb-4">{curso.titulo}</h3>
+                                                                <div className="space-y-3 mb-6">
+                                                                    <div className="flex items-center gap-2 text-gray-600">
+                                                                        <Check className="h-5 w-5 text-green-600" />
+                                                                        <span>{curso.duracao}</span>
+                                                                    </div>
+                                                                    <div className="flex items-center gap-2 text-gray-600">
+                                                                        <Check className="h-5 w-5 text-green-600" />
+                                                                        <span>{curso.modalidade}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <p className="text-gray-600 mb-6">{curso.descricao}</p>
+                                                                <Button className="w-full bg-blue-600 hover:bg-blue-700" size="lg">
+                                                                    SAIBA MAIS
+                                                                    <ChevronRight className="ml-2" />
+                                                                </Button>
+                                                            </CardContent>
+                                                        </Card>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </section>
+
+                                        {/* Cursos Profissionalizantes - NÃO TEOLÓGICOS */}
+                                        <section className="py-20 bg-white">
+                                            <div className="container mx-auto px-4">
+                                                <div className="text-center mb-12">
+                                                    <h2 className="text-4xl font-bold text-gray-900 mb-4">CURSOS PROFISSIONALIZANTES</h2>
+                                                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                                                        Formações especializadas para atuação profissional em diversas áreas
+                                                    </p>
+                                                </div>
+
+                                                {/* Grid de Cursos Profissionalizantes */}
+                                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                                    {/* Psicanálise Clínica */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                                        <img
+                                                            src="C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_0_1765636145826.jpg"
+                                                            alt="Psicanálise Clínica"
+                                                            className="w-full h-80 object-cover"
+                                                        />
+                                                        <CardContent className="p-6">
+                                                            <h3 className="font-bold text-xl mb-2">Psicanálise Clínica</h3>
+                                                            <p className="text-sm text-gray-600 mb-4">Formação completa em psicanálise com foco em aconselhamento pastoral e clínico</p>
+                                                            <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                                                                <Check className="h-4 w-4 text-green-600" />
+                                                                <span>360 horas | 100% EAD</span>
+                                                            </div>
+                                                            <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                                                                SAIBA MAIS
+                                                                <ChevronRight className="ml-2 h-4 w-4" />
+                                                            </Button>
+                                                        </CardContent>
+                                                    </Card>
+
+                                                    {/* Juiz Arbitral */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                                        <img
+                                                            src="C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_1_1765636145826.jpg"
+                                                            alt="Juiz Arbitral"
+                                                            className="w-full h-80 object-cover"
+                                                        />
+                                                        <CardContent className="p-6">
+                                                            <h3 className="font-bold text-xl mb-2">Juiz Arbitral</h3>
+                                                            <p className="text-sm text-gray-600 mb-4">Capacitação para resolução alternativa de conflitos via arbitragem eclesiástica</p>
+                                                            <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                                                                <Check className="h-4 w-4 text-green-600" />
+                                                                <span>200 horas | 100% EAD</span>
+                                                            </div>
+                                                            <Button className="w-full bg-amber-600 hover:bg-amber-700">
+                                                                SAIBA MAIS
+                                                                <ChevronRight className="ml-2 h-4 w-4" />
+                                                            </Button>
+                                                        </CardContent>
+                                                    </Card>
+
+                                                    {/* Líderes de Células */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                                        <img
+                                                            src="C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_2_1765636145826.jpg"
+                                                            alt="Líderes de Células"
+                                                            className="w-full h-80 object-cover"
+                                                        />
+                                                        <CardContent className="p-6">
+                                                            <h3 className="font-bold text-xl mb-2">Formação de Líderes de Células</h3>
+                                                            <p className="text-sm text-gray-600 mb-4">Prepare-se para liderar grupos familiares e células de crescimento</p>
+                                                            <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                                                                <Check className="h-4 w-4 text-green-600" />
+                                                                <span>120 horas | 100% EAD</span>
+                                                            </div>
+                                                            <Button className="w-full bg-green-600 hover:bg-green-700">
+                                                                SAIBA MAIS
+                                                                <ChevronRight className="ml-2 h-4 w-4" />
+                                                            </Button>
+                                                        </CardContent>
+                                                    </Card>
+
+                                                    {/* Juiz de Paz */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-blue-200">
+                                                        <div className="w-full h-80 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
+                                                            <div className="text-center p-8">
+                                                                <GraduationCap className="h-24 w-24 text-blue-600 mx-auto mb-4" />
+                                                                <h4 className="text-2xl font-bold text-blue-900">Juiz de Paz</h4>
+                                                            </div>
+                                                        </div>
+                                                        <CardContent className="p-6">
+                                                            <h3 className="font-bold text-xl mb-2">Juiz de Paz</h3>
+                                                            <p className="text-sm text-gray-600 mb-4">Habilitação para celebração de casamentos civis e conciliações</p>
+                                                            <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                                                                <Check className="h-4 w-4 text-green-600" />
+                                                                <span>180 horas | 100% EAD</span>
+                                                            </div>
+                                                            <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                                                                SAIBA MAIS
+                                                                <ChevronRight className="ml-2 h-4 w-4" />
+                                                            </Button>
+                                                        </CardContent>
+                                                    </Card>
+
+                                                    {/* Direitos Humanos */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-red-200">
+                                                        <div className="w-full h-80 bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
+                                                            <div className="text-center p-8">
+                                                                <Users className="h-24 w-24 text-red-600 mx-auto mb-4" />
+                                                                <h4 className="text-2xl font-bold text-red-900">Direitos Humanos</h4>
+                                                            </div>
+                                                        </div>
+                                                        <CardContent className="p-6">
+                                                            <h3 className="font-bold text-xl mb-2">Direitos Humanos</h3>
+                                                            <p className="text-sm text-gray-600 mb-4">Estudo completo sobre direitos fundamentais e dignidade humana</p>
+                                                            <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                                                                <Check className="h-4 w-4 text-green-600" />
+                                                                <span>160 horas | 100% EAD</span>
+                                                            </div>
+                                                            <Button
+                                                                className="w-full bg-red-600 hover:bg-red-700"
+                                                                onClick={() => window.open('https://cfidh-direitos-humans.lovable.app/', '_blank')}
+                                                            >
+                                                                SAIBA MAIS
+                                                                <ChevronRight className="ml-2 h-4 w-4" />
+                                                            </Button>
+                                                        </CardContent>
+                                                    </Card>
+
+                                                    {/* Gestão Eclesiástica */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-indigo-200">
+                                                        <div className="w-full h-80 bg-gradient-to-br from-indigo-50 to-indigo-100 flex items-center justify-center">
+                                                            <div className="text-center p-8">
+                                                                <TrendingUp className="h-24 w-24 text-indigo-600 mx-auto mb-4" />
+                                                                <h4 className="text-2xl font-bold text-indigo-900">Gestão</h4>
+                                                            </div>
+                                                        </div>
+                                                        <CardContent className="p-6">
+                                                            <h3 className="font-bold text-xl mb-2">Gestão Eclesiástica</h3>
+                                                            <p className="text-sm text-gray-600 mb-4">Administração profissional de igrejas e instituições religiosas</p>
+                                                            <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                                                                <Check className="h-4 w-4 text-green-600" />
+                                                                <span>200 horas | 100% EAD</span>
+                                                            </div>
+                                                            <Button className="w-full bg-indigo-600 hover:bg-indigo-700">
+                                                                SAIBA MAIS
+                                                                <ChevronRight className="ml-2 h-4 w-4" />
+                                                            </Button>
+                                                        </CardContent>
+                                                    </Card>
+                                                </div>
+                                            </div>
+                                        </section>
+
+                                        {/* Biblioteca FAITEL - Manuais de Estudo */}
+                                        <section className="py-20 bg-gray-50">
+                                            <div className="container mx-auto px-4">
+                                                <div className="text-center mb-12">
+                                                    <h2 className="text-4xl font-bold text-gray-900 mb-4">BIBLIOTECA FAITEL</h2>
+                                                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                                                        Manuais de Estudo Autodidático desenvolvidos pela FAITEL para sua formação teológica
+                                                    </p>
+                                                </div>
+
+                                                {/* Grid de Livros */}
+                                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                                                    {/* Livro 1 - Apologética */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                                        <img
+                                                            src="C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_0_1765635984984.jpg"
+                                                            alt="Apologética"
+                                                            className="w-full h-64 object-cover"
+                                                        />
+                                                        <CardContent className="p-4">
+                                                            <h3 className="font-bold text-sm mb-1">Apologética</h3>
+                                                            <p className="text-xs text-gray-600">Ciclo I</p>
+                                                        </CardContent>
+                                                    </Card>
+
+                                                    {/* Livro 2 - Antropologia */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                                        <img
+                                                            src="C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_1_1765635984984.jpg"
+                                                            alt="Antropologia"
+                                                            className="w-full h-64 object-cover"
+                                                        />
+                                                        <CardContent className="p-4">
+                                                            <h3 className="font-bold text-sm mb-1">Antropologia</h3>
+                                                            <p className="text-xs text-gray-600">Ciclo I</p>
+                                                        </CardContent>
+                                                    </Card>
+
+                                                    {/* Livro 3 - Manual 1 */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                                        <img
+                                                            src="C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_0_1765636145826.jpg"
+                                                            alt="Manual Teológico"
+                                                            className="w-full h-64 object-cover"
+                                                        />
+                                                        <CardContent className="p-4">
+                                                            <h3 className="font-bold text-sm mb-1">Teologia Bíblica</h3>
+                                                            <p className="text-xs text-gray-600">Ciclo I</p>
+                                                        </CardContent>
+                                                    </Card>
+
+                                                    {/* Livro 4 - Manual 2 */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                                        <img
+                                                            src="C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_1_1765636145826.jpg"
+                                                            alt="Hermenêutica"
+                                                            className="w-full h-64 object-cover"
+                                                        />
+                                                        <CardContent className="p-4">
+                                                            <h3 className="font-bold text-sm mb-1">Hermenêutica</h3>
+                                                            <p className="text-xs text-gray-600">Ciclo I</p>
+                                                        </CardContent>
+                                                    </Card>
+
+                                                    {/* Livro 5 - Manual 3 */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                                        <img
+                                                            src="C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_2_1765636145826.jpg"
+                                                            alt="Fundamentos"
+                                                            className="w-full h-64 object-cover"
+                                                        />
+                                                        <CardContent className="p-4">
+                                                            <h3 className="font-bold text-sm mb-1">Fundamentos</h3>
+                                                            <p className="text-xs text-gray-600">Ciclo I</p>
+                                                        </CardContent>
+                                                    </Card>
+
+                                                    {/* Livro 6 - Manual 4 */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                                        <img
+                                                            src="C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_3_1765636145826.jpg"
+                                                            alt="Homilética"
+                                                            className="w-full h-64 object-cover"
+                                                        />
+                                                        <CardContent className="p-4">
+                                                            <h3 className="font-bold text-sm mb-1">Homilética</h3>
+                                                            <p className="text-xs text-gray-600">Ciclo I</p>
+                                                        </CardContent>
+                                                    </Card>
+
+                                                    {/* Livro 7 - Manual 5 */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                                        <img
+                                                            src="C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_4_1765636145826.jpg"
+                                                            alt="História da Igreja"
+                                                            className="w-full h-64 object-cover"
+                                                        />
+                                                        <CardContent className="p-4">
+                                                            <h3 className="font-bold text-sm mb-1">História da Igreja</h3>
+                                                            <p className="text-xs text-gray-600">Ciclo I</p>
+                                                        </CardContent>
+                                                    </Card>
+
+                                                    {/* Livro 8 - Teologia Sistemática */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                                        <img
+                                                            src="C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_0_1765636627946.jpg"
+                                                            alt="Teologia Sistemática"
+                                                            className="w-full h-64 object-cover"
+                                                        />
+                                                        <CardContent className="p-4">
+                                                            <h3 className="font-bold text-sm mb-1">Teologia Sistemática</h3>
+                                                            <p className="text-xs text-gray-600">Ciclo II</p>
+                                                        </CardContent>
+                                                    </Card>
+
+                                                    {/* Livro 9 - Exegese */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                                        <img
+                                                            src="C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_1_1765636627946.jpg"
+                                                            alt="Exegese Bíblica"
+                                                            className="w-full h-64 object-cover"
+                                                        />
+                                                        <CardContent className="p-4">
+                                                            <h3 className="font-bold text-sm mb-1">Exegese Bíblica</h3>
+                                                            <p className="text-xs text-gray-600">Ciclo II</p>
+                                                        </CardContent>
+                                                    </Card>
+
+                                                    {/* Livro 10 - Pneumatologia */}
+                                                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                                        <img
+                                                            src="C:/Users/User/.gemini/antigravity/brain/79939a1d-cb7c-4ad1-9f30-5de8fd9c40ca/uploaded_image_2_1765636627946.jpg"
+                                                            alt="Pneumatologia"
+                                                            className="w-full h-64 object-cover"
+                                                        />
+                                                        <CardContent className="p-4">
+                                                            <h3 className="font-bold text-sm mb-1">Pneumatologia</h3>
+                                                            <p className="text-xs text-gray-600">Ciclo II</p>
+                                                        </CardContent>
+                                                    </Card>
+                                                </div>
+
+                                                {/* CTA da Biblioteca */}
+                                                <div className="text-center mt-12">
+                                                    <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white font-bold">
+                                                        VER CATÁLOGO COMPLETO
+                                                        <BookOpen className="ml-2 h-5 w-5" />
+                                                    </Button>
+                                                    <p className="text-sm text-gray-600 mt-4">
+                                                        Mais de 50 manuais disponíveis para sua formação teológica completa
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </section>
+
+                                        {/* CTA Final */}
+                                        <section className="py-20 bg-gradient-to-r from-blue-900 to-purple-900 text-white">
+                                            <div className="container mx-auto px-4 text-center">
+                                                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                                                    Comece Sua Jornada Hoje
+                                                </h2>
+                                                <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+                                                    Inscreva-se agora e transforme sua vida através da educação teológica de excelência
+                                                </p>
+                                                <div className="flex flex-wrap justify-center gap-4">
+                                                    <Button size="lg" className="bg-yellow-400 text-blue-900 hover:bg-yellow-500 font-bold text-lg px-12 py-6">
+                                                        INSCREVER-SE AGORA
+                                                        <ChevronRight className="ml-2" />
+                                                    </Button>
+                                                    <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 font-bold text-lg px-12 py-6">
+                                                        FALAR COM CONSULTOR
+                                                        <Phone className="ml-2" />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </section>
+
+                                        {/* Footer */}
+                                        <footer className="bg-gray-900 text-white py-12">
+                                            <div className="container mx-auto px-4">
+                                                <div className="grid md:grid-cols-4 gap-8 mb-8">
+                                                    {/* Logo e Sobre */}
+                                                    <div>
+                                                        <div className="flex items-center gap-3 mb-4">
+                                                            <img src={logoFaitel} alt="FAITEL" className="h-12 w-12" />
+                                                            <div>
+                                                                <div className="text-xl font-bold">FAITEL</div>
+                                                                <div className="text-sm text-gray-400">Desde 1999</div>
+                                                            </div>
+                                                        </div>
+                                                        <p className="text-gray-400 text-sm">
+                                                            Faculdade Internacional Teológica de Líderes
+                                                        </p>
+                                                    </div>
+
+                                                    {/* Endereço */}
+                                                    <div>
+                                                        <h4 className="font-bold mb-4">Endereço</h4>
+                                                        <div className="space-y-2 text-sm text-gray-400">
+                                                            <div className="flex items-start gap-2">
+                                                                <MapPin className="h-4 w-4 mt-1 flex-shrink-0" />
+                                                                <div>
+                                                                    Rua Henrique Alves Santos Barbosa, 119<br />
+                                                                    Siriri - Aguaí-SP<br />
+                                                                    CEP: 13.866-052
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Contatos WhatsApp */}
+                                                    <div>
+                                                        <h4 className="font-bold mb-4">WhatsApp</h4>
+                                                        <div className="space-y-3 text-sm">
+                                                            <a
+                                                                href="https://wa.me/5571983384883?text=Olá, gostaria de informações sobre a FAITEL"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="flex items-center gap-2 text-green-400 hover:text-green-300 transition-colors"
+                                                            >
+                                                                <Phone className="h-4 w-4" />
+                                                                <div>
+                                                                    <div className="font-semibold">Secretaria</div>
+                                                                    <div className="text-xs text-gray-400">(71) 98338-4883</div>
+                                                                </div>
+                                                            </a>
+                                                            <a
+                                                                href="https://wa.me/5575991018395?text=Olá, preciso de informações sobre pagamentos"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors"
+                                                            >
+                                                                <Phone className="h-4 w-4" />
+                                                                <div>
+                                                                    <div className="font-semibold">Financeiro</div>
+                                                                    <div className="text-xs text-gray-400">(75) 99101-8395</div>
+                                                                </div>
+                                                            </a>
+                                                            <a
+                                                                href="https://wa.me/5571996822782"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="flex items-center gap-2 text-yellow-400 hover:text-yellow-300 transition-colors"
+                                                            >
+                                                                <Phone className="h-4 w-4" />
+                                                                <div>
+                                                                    <div className="font-semibold">Diretor</div>
+                                                                    <div className="text-xs text-gray-400">(71) 99682-2782</div>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Emails e Links */}
+                                                    <div>
+                                                        <h4 className="font-bold mb-4">E-mail e Redes Sociais</h4>
+                                                        <div className="space-y-2 text-sm text-gray-400 mb-6">
+                                                            <a href="mailto:faiteloficial@gmail.com" className="flex items-center gap-2 hover:text-white">
+                                                                <Mail className="h-4 w-4" />
+                                                                <span>faiteloficial@gmail.com</span>
+                                                            </a>
+                                                            <a href="mailto:faitelalunos@gmail.com" className="flex items-center gap-2 hover:text-white">
+                                                                <Mail className="h-4 w-4" />
+                                                                <span>faitelalunos@gmail.com</span>
+                                                            </a>
+                                                        </div>
+
+                                                        <div className="space-y-3 text-sm text-gray-400 mb-6">
+                                                            <div className="flex items-center gap-2">
+                                                                <Globe className="h-4 w-4" />
+                                                                <span>faculdadefaitel.com.br</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <h4 className="font-bold mb-3 text-yellow-400">Siga-nos</h4>
+                                                        <div className="flex gap-3">
+                                                            <a
+                                                                href="https://www.youtube.com/@faculdadeinternacionaldeli6187"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="w-10 h-10 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center transition-colors"
+                                                                title="YouTube FAITEL"
+                                                            >
+                                                                <Play className="h-5 w-5 text-white" />
+                                                            </a>
+                                                            <a
+                                                                href="https://www.facebook.com/valdibei.santos.1"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors"
+                                                                title="Facebook"
+                                                            >
+                                                                <Globe className="h-5 w-5 text-white" />
+                                                            </a>
+                                                            <a
+                                                                href="https://www.instagram.com/faitel.faitel/"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-full flex items-center justify-center transition-colors"
+                                                                title="Instagram"
+                                                            >
+                                                                <Globe className="h-5 w-5 text-white" />
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
+                                                    © 2025 FAITEL - Faculdade Internacional Teológica de Líderes. Todos os direitos reservados.
+                                                </div>
+                                            </div>
+                                        </footer>
+
+                                        {/* Botão Flutuante WhatsApp */}
+                                        <a
+                                            href="https://wa.me/5571983384883?text=Olá, gostaria de falar com a secretaria da FAITEL"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 z-50 flex items-center gap-2 group"
+                                            title="Fale com a Secretaria pelo WhatsApp"
+                                        >
+                                            <Phone className="h-6 w-6" />
+                                            <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 whitespace-nowrap font-semibold">
+                                                Secretaria
+                                            </span>
+                                        </a>
+                                    </div>
+                                    );
+}

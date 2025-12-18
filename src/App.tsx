@@ -16,7 +16,7 @@ import Comunicacao from "./pages/Comunicacao";
 import Relatorios from "./pages/Relatorios";
 import Financeiro from "./pages/Financeiro";
 import Configuracoes from "./pages/Configuracoes";
- 
+
 import Parceiros from "./pages/Parceiros";
 import ParceiroDetalhe from "./pages/ParceiroDetalhe";
 import RedesSociais from "./pages/RedesSociais";
@@ -122,7 +122,7 @@ import AccountingExport from "@/pages/tesouraria/AccountingExport";
 import AccountingSpedExport from "@/pages/tesouraria/AccountingSpedExport";
 import CostCenters from "@/pages/tesouraria/CostCenters";
 import ChartAccounts from "@/pages/tesouraria/ChartAccounts";
- 
+
 import AccountingCustomExport from "@/pages/tesouraria/AccountingCustomExport";
 import TrendsReports from "@/pages/tesouraria/TrendsReports";
 import FinanceTypeMapping from "@/pages/tesouraria/FinanceTypeMapping";
@@ -159,6 +159,8 @@ import StudentDashboard from "@/pages/ead/student/Dashboard";
 import StudentLogin from "@/pages/ead/StudentLogin";
 import WelcomeEmailEditor from "@/pages/ead/admin/WelcomeEmailEditor";
 import ContentOnboarding from "@/pages/ead/admin/ContentOnboarding";
+import FAITELDashboard from "@/pages/ead/FAITELDashboard";
+import BachareladoTeologia from "./pages/ead/BachareladoTeologia";
 import SeedDemo from "@/pages/ead/admin/SeedDemo";
 import ModuleViewer from "@/pages/ead/student/ModuleViewer";
 import ExamRunner from "@/pages/ead/student/ExamRunner";
@@ -168,6 +170,26 @@ import FinancePanel from "@/pages/ead/admin/FinancePanel";
 import Licensing from "@/pages/ead/admin/Licensing";
 import SettingsManage from "@/pages/ead/admin/SettingsManage";
 import { HomeFloating } from "@/components/layout/HomeFloating";
+import EmConstrucao from "@/pages/EmConstrucao";
+import AlunoPortal from "@/pages/ead/portals/AlunoPortal";
+import ProfessorPortal from "@/pages/ead/portals/ProfessorPortal";
+import DiretorPortal from "@/pages/ead/portals/DiretorPortal";
+import SuperAdminPortal from "@/pages/ead/portals/SuperAdminPortal";
+
+// New EAD Platform MVP Components
+import StudentManager from "@/pages/ead/admin/StudentManager";
+import StudentDashboardNew from "@/pages/ead/aluno/StudentDashboard";
+import StudentCourseView from "@/pages/ead/aluno/StudentCourseView";
+import LessonPlayer from "@/pages/ead/aluno/LessonPlayer";
+import CadastrarFaculdade from "@/pages/ead/admin/CadastrarFaculdade";
+import FaculdadesManager from "@/pages/ead/admin/FaculdadesManager";
+import CadastrarPolo from "@/pages/ead/admin/CadastrarPolo";
+import PolosManager from "@/pages/ead/admin/PolosManager";
+import CadastrarProfessor from "@/pages/ead/admin/CadastrarProfessor";
+import ProfessoresManager from "@/pages/ead/admin/ProfessoresManager";
+import ProfessorDashboard from "@/pages/ead/professor/ProfessorDashboard";
+import FaitelLandingPage from "@/pages/ead/public/FaitelLandingPage";
+
 
 const queryClient = new QueryClient();
 
@@ -190,13 +212,21 @@ const App = () => (
               <div className="pt-32 min-h-screen flex flex-col">
                 <Routes>
                   {/* Public routes */}
-                  <Route path="/" element={<Portal />} />
+                  <Route path="/" element={<FaitelLandingPage />} />
+                  <Route path="/auth/login" element={<Login />} />
                   <Route path="/escalas-publicas" element={<PublicSchedulePage />} />
                   <Route path="/agenda-publica" element={<AgendaPublica />} />
                   <Route path="/agenda-publica-cemadeb" element={<AgendaPublicaCemadeb />} />
                   <Route path="/sistema-escalas" element={<LandingEscalas />} />
                   <Route path="/cadastro-membro/:matrizId" element={<CadastroMembroPublico />} />
-                  
+
+                  {/* EAD Portal Routes */}
+                  <Route path="/aluno" element={<AlunoPortal />} />
+                  <Route path="/professor" element={<ProfessorPortal />} />
+                  <Route path="/admin/diretor" element={<DiretorPortal />} />
+                  <Route path="/admin/super" element={<SuperAdminPortal />} />
+                  <Route path="/em-construcao" element={<EmConstrucao />} />
+
                   <Route path="/recuperar-senha" element={<RecuperarSenha />} />
                   <Route path="/convite/:token" element={<AceitarConvite />} />
                   <Route path="/parceiros" element={<Parceiros />} />
@@ -314,6 +344,7 @@ const App = () => (
                   <Route path="/tesouraria/especificacao" element={<ProtectedRoute><AccountingSpecManager /></ProtectedRoute>} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/ead/aluno/login" element={<StudentLogin />} />
+                  <Route path="/ead/home" element={<StudentLogin />} />
                   <Route path="/admin/global" element={<ProtectedRoute><GlobalAdmin /></ProtectedRoute>} />
                   <Route path="/admin/igreja/:id" element={<ProtectedRoute><ChurchAdminDashboard /></ProtectedRoute>} />
                   <Route path="/admin/convencao/:id" element={<ProtectedRoute><ConventionAdminDashboard /></ProtectedRoute>} />
@@ -331,6 +362,8 @@ const App = () => (
                   <Route path="/tesouraria/relatorio-multinivel" element={<ProtectedRoute><MultiLevelReports /></ProtectedRoute>} />
 
                   {/* EAD SISCOF */}
+                  <Route path="/ead" element={<ProtectedRoute><FAITELDashboard /></ProtectedRoute>} />
+                  <Route path="/ead/bacharelado-teologia" element={<BachareladoTeologia />} />
                   <Route path="/ead/admin/cursos" element={<ProtectedRoute><CoursesManage /></ProtectedRoute>} />
                   <Route path="/ead/admin/modulos" element={<ProtectedRoute><ModulesManage /></ProtectedRoute>} />
                   <Route path="/ead/admin/banco-questoes" element={<ProtectedRoute><QuestionsBank /></ProtectedRoute>} />
@@ -339,7 +372,19 @@ const App = () => (
                   <Route path="/ead/polo/montar-prova" element={<ProtectedRoute><ExamBuilder /></ProtectedRoute>} />
                   <Route path="/ead/professor/conteudos" element={<ProtectedRoute><ContentManage /></ProtectedRoute>} />
                   <Route path="/ead/aluno" element={<ProtectedRoute><StudentDashboard /></ProtectedRoute>} />
-                  <Route path="/ead/aluno/curso/:courseId" element={<ProtectedRoute><ModuleViewer /></ProtectedRoute>} />
+                  <Route path="/ead/aluno/dashboard" element={<ProtectedRoute><StudentDashboardNew /></ProtectedRoute>} />
+                  <Route path="/ead/aluno/curso/:courseId" element={<ProtectedRoute><StudentCourseView /></ProtectedRoute>} />
+                  <Route path="/ead/aluno/aula/:lessonId" element={<ProtectedRoute><LessonPlayer /></ProtectedRoute>} />
+                  <Route path="/ead/admin/alunos" element={<ProtectedRoute><StudentManager /></ProtectedRoute>} />
+                  <Route path="/ead/admin/cadastrar-faculdade" element={<ProtectedRoute><CadastrarFaculdade /></ProtectedRoute>} />
+                  <Route path="/ead/admin/faculdades" element={<ProtectedRoute><FaculdadesManager /></ProtectedRoute>} />
+                  <Route path="/ead/admin/cadastrar-polo" element={<ProtectedRoute><CadastrarPolo /></ProtectedRoute>} />
+                  <Route path="/ead/admin/polos" element={<ProtectedRoute><PolosManager /></ProtectedRoute>} />
+                  <Route path="/ead/admin/cadastrar-professor" element={<ProtectedRoute><CadastrarProfessor /></ProtectedRoute>} />
+                  <Route path="/ead/admin/professores" element={<ProtectedRoute><ProfessoresManager /></ProtectedRoute>} />
+                  <Route path="/ead/professor/dashboard" element={<ProtectedRoute><ProfessorDashboard /></ProtectedRoute>} />
+                  <Route path="/ead/faitel" element={<FaitelLandingPage />} />
+                  <Route path="/ead/home" element={<FaitelLandingPage />} />
                   <Route path="/ead/aluno/exam/:moduleId" element={<ProtectedRoute><ExamRunner /></ProtectedRoute>} />
                   <Route path="/ead/aluno/player/:moduleId" element={<ProtectedRoute><VideoPlayer /></ProtectedRoute>} />
                   <Route path="/ead/relatorios/academicos" element={<ProtectedRoute><AcademicReports /></ProtectedRoute>} />
@@ -376,4 +421,3 @@ const App = () => (
 );
 
 export default App;
- 

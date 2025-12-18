@@ -1,0 +1,55 @@
+{
+    "app": {
+        "name": "SISCOF",
+        "tagline": "Sistema de Gestão Eclesiástica"
+    },
+    "nav": {
+        "home": "Início",
+        "dashboard": "Painel",
+        "churches": "Igrejas",
+        "members": "Membros",
+        "treasury": "Tesouraria",
+        "ead": "EAD",
+        "reports": "Relatórios",
+        "settings": "Configurações",
+        "logout": "Sair"
+    },
+    "buttons": {
+        "save": "Salvar",
+        "cancel": "Cancelar",
+        "delete": "Excluir",
+        "edit": "Editar",
+        "add": "Adicionar",
+        "back": "Voltar",
+        "next": "Próximo",
+        "submit": "Enviar",
+        "search": "Buscar",
+        "filter": "Filtrar",
+        "export": "Exportar",
+        "import": "Importar",
+        "close": "Fechar",
+        "confirm": "Confirmar"
+    },
+    "messages": {
+        "success": "Operação realizada com sucesso!",
+        "error": "Ocorreu um erro. Tente novamente.",
+        "loading": "Carregando...",
+        "noData": "Nenhum dado encontrado",
+        "confirmDelete": "Tem certeza que deseja excluir?",
+        "saved": "Salvo com sucesso",
+        "deleted": "Excluído com sucesso",
+        "updated": "Atualizado com sucesso"
+    },
+    "forms": {
+        "name": "Nome",
+        "email": "E-mail",
+        "phone": "Telefone",
+        "address": "Endereço",
+        "city": "Cidade",
+        "state": "Estado",
+        "zipCode": "CEP",
+        "required": "Campo obrigatório",
+        "invalidEmail": "E-mail inválido",
+        "invalidPhone": "Telefone inválido"
+    }
+}
