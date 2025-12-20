@@ -9,7 +9,7 @@ lerna-debug.log*
 
 node_modules
 .node_bin
-dist
+# dist - REMOVED to allow GitHub Pages deployment
 dist-ssr
 *.local
 
