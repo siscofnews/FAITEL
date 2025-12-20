@@ -73,11 +73,6 @@ import ConfiguracoesVisuais from "./pages/ConfiguracoesVisuais";
 
 // SISCOF 3.0 - Dual RBAC & EAD Module
 import GerenciarPerfisGlobais from "./pages/GerenciarPerfisGlobais";
-import GerenciarCursosEAD from "./pages/GerenciarCursosEAD";
-import GerenciarModulosAulasEAD from "./pages/GerenciarModulosAulasEAD";
-import AssistirCursoEAD from "./pages/AssistirCursoEAD";
-import VisualizarAulaEAD from "./pages/VisualizarAulaEAD";
-import MeusCursosEAD from "./pages/MeusCursosEAD";
 import AtribuirPermissoes from "./pages/AtribuirPermissoes";
 import RadioSISCOF from "./pages/RadioSISCOF";
 
@@ -135,6 +130,7 @@ import GlobalAdmin from "@/pages/admin/GlobalAdmin";
 import ChurchAdminDashboard from "@/pages/admin/ChurchAdminDashboard";
 import ConventionAdminDashboard from "@/pages/admin/ConventionAdminDashboard";
 import CollegeAdminDashboard from "@/pages/admin/CollegeAdminDashboard";
+
 import MatrizManage from "@/pages/admin/churches/MatrizManage";
 import SedeManage from "@/pages/admin/churches/SedeManage";
 import SubsedeManage from "@/pages/admin/churches/SubsedeManage";
@@ -398,11 +394,6 @@ const App = () => (
                   {/* SISCOF 3.0 - Dual RBAC & EAD Module */}
                   <Route path="/gerenciar-perfis-globais" element={<ProtectedRoute><GerenciarPerfisGlobais /></ProtectedRoute>} />
                   <Route path="/atribuir-permissoes" element={<ProtectedRoute><AtribuirPermissoes /></ProtectedRoute>} />
-                  <Route path="/gerenciar-cursos-ead" element={<ProtectedRoute><GerenciarCursosEAD /></ProtectedRoute>} />
-                  <Route path="/ead/curso/:courseId/gerenciar" element={<ProtectedRoute><GerenciarModulosAulasEAD /></ProtectedRoute>} />
-                  <Route path="/meus-cursos-ead" element={<ProtectedRoute><MeusCursosEAD /></ProtectedRoute>} />
-                  <Route path="/ead/curso/:courseId" element={<ProtectedRoute><AssistirCursoEAD /></ProtectedRoute>} />
-                  <Route path="/ead/aula/:lessonId" element={<ProtectedRoute><VisualizarAulaEAD /></ProtectedRoute>} />
                   <Route path="/radio" element={<ProtectedRoute><RadioSISCOF /></ProtectedRoute>} />
 
 
